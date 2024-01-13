@@ -1,0 +1,33 @@
+{
+  "name": "nito",
+  "description": "A lightweight client for the Mayan EDMS",
+  "private": true,
+  "version": "0.4.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "i18n": "sync-i18n --files '**/i18n/*.json' --primary de --languages en --space 2"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.1",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tsconfig/svelte": "^5.0.2",
+    "@types/luxon": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "axios": "^1.6.5",
+    "i18next-json-sync": "^3.1.2",
+    "luxon": "^3.4.4",
+    "postcss": "^8.4.33",
+    "svelte": "^4.2.8",
+    "svelte-check": "^3.6.2",
+    "svelte-i18n": "^4.0.0",
+    "tailwindcss": "^3.4.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
+  }
+}
