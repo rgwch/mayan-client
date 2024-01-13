@@ -272,6 +272,13 @@ export class Mayan {
     return result.map(obj => obj.document)
   }
 
+  public async addToFavourites(document: Document): Promise<any> {
+    return this.post("documents/favorites/", { document }, "POST");
+  }
+
+  public async removeFromFavourites(document_id: number): Promise<any> {
+    return this.post("documents/favorites/" + document_id + "/", {}, "DELETE");
+  }
   /**
    * List all available document types
    * (Current user need permission to view document types)

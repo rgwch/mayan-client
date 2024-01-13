@@ -1,11 +1,12 @@
 import { _ } from 'svelte-i18n';
-import type { Tag, Cabinet, DocumentType } from './types';
+import type { Tag, Cabinet, Document, DocumentType } from './types';
 import { mayan } from './mayan';
 
 export class Store {
     private tags: Tag[] = [];
     private cabinets: Cabinet[] = [];
     private documentTypes: DocumentType[] = [];
+    private favourites: Document[] = [];
 
     public async getTags() {
         if (this.tags.length == 0) {
@@ -24,6 +25,12 @@ export class Store {
             this.documentTypes = await mayan.listDocumentTypes();
         }
         return this.documentTypes
+    }
+    public async getFavourites() {
+        if (this.favourites.length == 0) {
+            this.favourites = await mayan.listFavouriteDocuments()
+        }
+        return this.favourites
     }
 }
 
