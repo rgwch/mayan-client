@@ -5,6 +5,7 @@
     let text = '';
     function doSearch() {
         dispatch('search', text);
+        text = '';
     }
 </script>
 
