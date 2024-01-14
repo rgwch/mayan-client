@@ -43,7 +43,7 @@
   });
 </script>
 
-<div class="flex flex-col mt-4 mr-4 p-4">
+<div class="flex flex-col mt-4 mr-4">
   <Dropdown
     title={$_('doctype')}
     elements={documentTypes}

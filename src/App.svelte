@@ -32,6 +32,7 @@
 
 <main class="container p-3 mx-auto">
   {#if showlogin}
+  <h1 class="text-2xl font-bold text-center mx-auto">Nito</h1>
     <div
       class="flex flex-col w-full md:w-1/3 mx-auto border-blue-600 border p-5 mt-5 text-lg">
       <input
@@ -49,7 +50,7 @@
         type="password"
         bind:value={pwd}
         placeholder={$_('password')} />
-      <div class="mb-2 flex flex-row">
+      <div class="mb-2 mt-1 flex flex-row">
         <input
           class="mr-2"
           type="checkbox"
@@ -57,8 +58,12 @@
           bind:checked={autologin} />
         <label for="autologin">{$_('stay_logged_in')}</label>
       </div>
-      <button class="large" on:click={login}>{$_('login')}</button>
+      <button class="large mt-3" on:click={login}>{$_('login')}</button>
+      <div class="mt-8 mx-auto font-semibold text-sm text-center">
+        {$_('privacy')}
+      </div>
     </div>
+   
   {:else}
     <div class="flex flex-col md:flex-row">
       <div class="mr-3 p-2 border-r border-blue-200">

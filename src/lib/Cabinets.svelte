@@ -80,12 +80,12 @@
 </div>
 
 <div>
-  <div class="mt-5 p-2 border-t border-blue-200">
+  <div class="mt-4 pt-2 border-t-2 border-blue-200">
     <p class="text-center text-2xl font-bold">{$_('create')}</p>
     <Uploader></Uploader>
   </div>
-  <div class="border-t border-blue-200">
-    <button class="mt-6 large mx-auto" on:click={() => mayan.logout()}
+  <div class="border-t-2 mt-4  border-blue-200">
+    <button class="mt-4 large mx-auto" on:click={() => mayan.logout()}
       >{$_('logout')}</button>
   </div>
 </div>
