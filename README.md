@@ -12,6 +12,8 @@ Youl'll need an existing Mayan EDMS instance running. I recommend using docker-c
 
 Create a user for Nito in the Mayan app. Create the Cabinets (Folders) you'll need from the Mayan UI.
 
+To build the app, you'll need [NodeJS](https://nodejs.org). Tested Version is 18.18.0.
+
 ## Installation
 
 ```
