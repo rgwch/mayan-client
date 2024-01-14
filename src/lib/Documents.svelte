@@ -1,9 +1,9 @@
 <script lang="ts">
-  import DocumentDisplay from "./Document.svelte";
-  import { _ } from "svelte-i18n";
-  import { mayan } from "./mayan";
-  import type { Document, Cabinet } from "./types";
-  import Uploader from "./widgets/Uploader.svelte";
+  import DocumentDisplay from './Document.svelte';
+  import { _ } from 'svelte-i18n';
+  import { mayan } from './mayan';
+  import type { Document, Cabinet } from './types';
+  import Uploader from './widgets/Uploader.svelte';
   export let cabinet: Cabinet | null;
   let docs: Array<Document> = [];
 
@@ -18,7 +18,7 @@
       });
     } else if (cabinet.id === -3) {
       mayan.listFavouriteDocuments().then((result) => {
-        docs = result;
+        docs = result.map((d) => d.document);
       });
     } else if (cabinet.id === -4) {
       mayan.listDocumentsWithTagId(cabinet.parent_id).then((result) => {
@@ -46,8 +46,8 @@
     </ul>
   {:else}
     <p class="mx-auto mt-5">
-      {$_("select_cabinet")}
-      <a href="#/" on:click={mayan.logout}>{$_("logout")}</a>
+      {$_('select_cabinet')}
+      <a href="#/" on:click={mayan.logout}>{$_('logout')}</a>
     </p>
   {/if}
 </div>
