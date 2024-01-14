@@ -8,33 +8,43 @@
   let docs: Array<Document> = [];
 
   $: if (cabinet != null) {
-    if (cabinet.id === -1) {
-      mayan.listRecentlyAddedDocuments().then((result) => {
-        docs = result;
-      });
-    } else if (cabinet.id === -2) {
-      mayan.listRecentlyAccessedDocuments().then((result) => {
-        docs = result;
-      });
-    } else if (cabinet.id === -3) {
-      mayan.listFavouriteDocuments().then((result) => {
-        docs = result.map((d) => d.document);
-      });
-    } else if (cabinet.id === -4) {
-      mayan.listDocumentsWithTagId(cabinet.parent_id).then((result) => {
-        docs = result;
-      });
-    } else {
-      mayan.listDocumentsFromCabinet(cabinet).then((result) => {
-        docs = result;
-      });
+    switch (cabinet.id) {
+      case -1:
+        mayan.listRecentlyAddedDocuments().then((result) => {
+          docs = result;
+        });
+        break;
+      case -2:
+        mayan.listRecentlyAccessedDocuments().then((result) => {
+          docs = result;
+        });
+        break;
+      case -3:
+        mayan.listFavouriteDocuments().then((result) => {
+          docs = result.map((d) => d.document);
+        });
+        break;
+      case -4:
+        mayan.listDocumentsWithTagId(cabinet.parent_id).then((result) => {
+          docs = result;
+        });
+        break;
+      case -5:
+        mayan.filterByContent(cabinet.full_path).then((result) => {
+          docs = result;
+        });
+        break;
+      default:
+        mayan.listDocumentsFromCabinet(cabinet).then((result) => {
+          docs = result;
+        });
     }
   }
 </script>
 
 <div>
   {#if cabinet}
-    <h1 class="text-2xl font-bold">{cabinet.full_path}</h1>
+    <h1 class="text-xl font-bold">{cabinet.full_path}</h1>
     <ul>
       {#each docs as doc}
         <li>

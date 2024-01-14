@@ -6,6 +6,7 @@
   import type { Cabinet, DocumentType, Tag } from './types';
   import Dropdown from './widgets/Dropdown.svelte';
   import Uploader from './widgets/Uploader.svelte';
+  import Search from './widgets/Search.svelte';
   const dispatch = createEventDispatcher();
   let cabinets: Array<Cabinet> = [];
   let doctypes: Array<DocumentType> = [];
@@ -19,7 +20,7 @@
   });
 </script>
 
-<h1 class="text-2xl font-bold">{$_('cabinets')}</h1>
+<h1 class="text-xl font-bold">{$_('cabinets')}</h1>
 {#each toplevel as cabinet}
   <ul>
     <li>
@@ -40,7 +41,7 @@
     {/if}
   </ul>
 {/each}
-<h1 class="text-2xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
+<h1 class="text-xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
   {$_('all')}
 </h1>
 <ul>
@@ -65,6 +66,11 @@
         dispatch('selected', { id: -2, full_path: $_('lastaccessed') })}
       >{$_('lastaccessed')}</a>
   </li>
+  <li>
+    <Search
+      on:search={(event) =>
+        dispatch('selected', { id: -5, full_path: event.detail })}></Search>
+  </li>
 </ul>
 <div class="mt-3">
   <Dropdown
@@ -81,10 +87,10 @@
 
 <div>
   <div class="mt-4 pt-2 border-t-2 border-blue-200">
-    <p class="text-center text-2xl font-bold">{$_('create')}</p>
+    <p class="text-center text-xl font-bold">{$_('create')}</p>
     <Uploader></Uploader>
   </div>
-  <div class="border-t-2 mt-4  border-blue-200">
+  <div class="border-t-2 mt-4 border-blue-200">
     <button class="mt-4 large mx-auto" on:click={() => mayan.logout()}
       >{$_('logout')}</button>
   </div>

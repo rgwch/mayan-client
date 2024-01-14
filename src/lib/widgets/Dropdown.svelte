@@ -86,9 +86,9 @@
                         href="#/"
                         on:click={() => {
                             title = label(item);
+                            open = false;
                             dispatch('selected', item);
                             selected = item;
-                            open = false;
                         }}
                         class="text-gray-700 block px-4 py-2 text-sm"
                         role="menuitem"
@@ -100,8 +100,8 @@
                     on:click={() => {
                         title = originalTitle;
                         selected = null;
-                        dispatch('selected', null);
                         open = false;
+                        dispatch('selected', null);
                     }}
                     class="text-gray-700 block px-4 py-2 text-sm"
                     role="menuitem"

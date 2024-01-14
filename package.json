@@ -2,7 +2,7 @@
   "name": "nito",
   "description": "A lightweight client for the Mayan EDMS",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
+    "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
     "@tsconfig/svelte": "^5.0.2",
     "@types/luxon": "^3.4.0",

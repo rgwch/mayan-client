@@ -80,7 +80,8 @@
     margin-top: 2px;
     margin-bottom: 2px;
     display: inline-block;
-    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    padding: 0.3rem 1.2rem;
     border: 1px solid lightblue;
     border-radius: 0.5rem;
     cursor: pointer;

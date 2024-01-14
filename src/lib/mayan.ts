@@ -428,6 +428,10 @@ export class Mayan {
 
   }
 
+  public async filterByContent(query: string): Promise<Array<Document>> {
+    return this.request("search/documents.documentsearchresult?q=" + query);
+  }
+
 }
 
 
