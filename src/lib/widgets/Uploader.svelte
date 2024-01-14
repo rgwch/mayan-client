@@ -16,7 +16,7 @@
   async function uploadFile(): Promise<boolean> {
     buttontext = $_('wait');
     const result = await mayan.createDocument(
-      selectedType,
+      selectedType ?? documentTypes[0],
       selectedCabinet?.id,
       'deu', // TODO generalize
       selectedFile,
