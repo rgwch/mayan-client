@@ -16,7 +16,7 @@ Create a user for Nito in the Mayan app. Create the Cabinets (Folders) you'll ne
 
 ```
 git clone https://github.com/rgwch/mayan-client
-cd mayan client
+cd mayan-client
 npm i
 npm run dev
 ```
@@ -45,7 +45,7 @@ Documents are further organized with tags. A document can have zero to several t
 
 A document can have an associated summary. Nito can display and edit such summaries.
 
-Mayan creates peview images of each page of a document. Nito can display these previews, but also allows to download the original document.
+Mayan creates preview images of each page of a document. Nito can display these previews, but also allows to download the original document.
 
 Please note that above operations are only possible, if the logged-in user has the respective role privileges defined in Mayan's fine grained permission system. (e.g. tags are only displayed if the user's role has the permission "View Tags"). So, if something doesn't work in Nito as expected, first check, if you're logged in as a user with sufficient permissions.
 
