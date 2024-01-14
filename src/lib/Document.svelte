@@ -18,8 +18,10 @@
   let cabinets: Array<Cabinet> = [];
   let allCabinets: Array<Cabinet> = [];
   let isFavorite: boolean = false;
+  let title: string = $_('wait');
   store.getTags().then((t) => (allTags = t));
   store.getCabinets().then((c) => (allCabinets = c));
+  makeTitle();
   async function load() {
     if (isOpen) {
       if (document.version_active?.page_list_url) {
@@ -81,8 +83,8 @@
     cabinets = await mayan.listCabinetsOfDocument(document);
   }
   async function makeTitle(): Promise<string> {
-    const favs = await store.getFavourites();
-    let title =
+    const favs = (await store.getFavourites()).map((f) => f.document);
+    title =
       document.label +
       ' (' +
       DateTime.fromISO(document.datetime_created).toFormat($_('dateformat')) +
@@ -94,105 +96,102 @@
     return title;
   }
   async function makeFavorite() {
-    if (!isFavorite) {
+    isFavorite = !isFavorite;
+    if (isFavorite) {
       await mayan.addToFavourites(document);
     } else {
       await mayan.removeFromFavourites(document.id);
     }
-    await store.getFavourites();
-    isFavorite = !isFavorite;
+    await store.getFavourites(true);
+    await makeTitle();
   }
 </script>
 
 <div>
-  {#await makeTitle()}
-    {$_('wait')}
-  {:then title}
-    <Collapse {title} on:open={load} bind:open={isOpen}>
-      <div slot="body">
-        <div class="text-xs font-medium flex flex-row">
-          <div>
-            {$_('created')}: {DateTime.fromISO(
-              document.datetime_created,
-            ).toFormat($_('dateformat'))}
-          </div>
-          <div class="ml-4">
-            {$_('doctype')}: {document.document_type.label}
-          </div>
-          <div class="ml-4">
-            <input
-              type="checkbox"
-              bind:checked={isFavorite}
-              on:click={makeFavorite} />
-            {$_('favorite')}
-          </div>
+  <Collapse {title} on:open={load} bind:open={isOpen}>
+    <div slot="body">
+      <div class="text-xs font-medium flex flex-row">
+        <div>
+          {$_('created')}: {DateTime.fromISO(
+            document.datetime_created,
+          ).toFormat($_('dateformat'))}
         </div>
-        <div class="flex flex-row border p-2 w-full">
-          {#each cabinets as cab}
-            <Badge
-              text={cab.full_path}
-              textcolor={'#000000'}
-              backgroundcolor={'#eeeeee'}
-              on:remove={() => removeCabinet(cab)}></Badge>
-          {/each}
-          <div class="flex-grow"></div>
-          <Dropdown
-            title={$_('add_cabinet')}
-            elements={allCabinets}
-            small={true}
-            label={(c) => c.full_path}
-            left={false}
-            on:selected={(c) => addCabinet(c)} />
+        <div class="ml-4">
+          {$_('doctype')}: {document.document_type.label}
         </div>
-
-        <div class="flex flex-row border bg-blue-100 my-1 p-2 w-full">
-          {#each tags as tag}
-            <Badge
-              text={tag.label}
-              textcolor={tag.color}
-              backgroundcolor={'#1a1a1a1a'}
-              on:remove={() => removeTag(tag)}></Badge>
-          {/each}
-          <div class="flex-grow"></div>
-          <Dropdown
-            title={$_('add_tag')}
-            elements={allTags}
-            small={true}
-            label={(t) => t.label}
-            left={false}
-            on:selected={addTag}>
-          </Dropdown>
-        </div>
-        <Card heading={$_('description')}>
-          <textarea
-            class="w-full"
-            on:focusout={saveDesc}
-            placeholder={$_('no_description')}
-            bind:value={document.description} />
-        </Card>
-        <div class="border border-blue-200 m-2 p-2">
-          {#if imageURL}
-            <div class="border border-blue-100 m-2 p-2">
-              {#if imageList.length > 1}
-                <button
-                  class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
-                  on:click={prevImage}>&lt;</button>
-                {$_('page')}
-                {currentImage + 1} / {imageList.length}
-                <button
-                  class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
-                  on:click={nextImage}>&gt;</button>
-              {/if}
-              <button
-                class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
-                on:click={downloadFile}>{$_('download')}</button>
-              <img src={imageURL} alt={document.label} width="400" />
-            </div>
-          {:else}
-            <p>{$_('no_image')}</p>
-          {/if}
+        <div class="ml-4">
+          <input
+            type="checkbox"
+            bind:checked={isFavorite}
+            on:click={makeFavorite} />
+          {$_('favorite')}
         </div>
       </div>
-    </Collapse>
-  {/await}
+      <div class="flex flex-row border p-2 w-full">
+        {#each cabinets as cab}
+          <Badge
+            text={cab.full_path}
+            textcolor={'#000000'}
+            backgroundcolor={'#eeeeee'}
+            on:remove={() => removeCabinet(cab)}></Badge>
+        {/each}
+        <div class="flex-grow"></div>
+        <Dropdown
+          title={$_('add_cabinet')}
+          elements={allCabinets}
+          small={true}
+          label={(c) => c.full_path}
+          left={false}
+          on:selected={(c) => addCabinet(c)} />
+      </div>
+
+      <div class="flex flex-row border bg-blue-100 my-1 p-2 w-full">
+        {#each tags as tag}
+          <Badge
+            text={tag.label}
+            textcolor={tag.color}
+            backgroundcolor={'#1a1a1a1a'}
+            on:remove={() => removeTag(tag)}></Badge>
+        {/each}
+        <div class="flex-grow"></div>
+        <Dropdown
+          title={$_('add_tag')}
+          elements={allTags}
+          small={true}
+          label={(t) => t.label}
+          left={false}
+          on:selected={addTag}>
+        </Dropdown>
+      </div>
+      <Card heading={$_('description')}>
+        <textarea
+          class="w-full"
+          on:focusout={saveDesc}
+          placeholder={$_('no_description')}
+          bind:value={document.description} />
+      </Card>
+      <div class="border border-blue-200 m-2 p-2">
+        {#if imageURL}
+          <div class="border border-blue-100 m-2 p-2">
+            {#if imageList.length > 1}
+              <button
+                class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
+                on:click={prevImage}>&lt;</button>
+              {$_('page')}
+              {currentImage + 1} / {imageList.length}
+              <button
+                class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
+                on:click={nextImage}>&gt;</button>
+            {/if}
+            <button
+              class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
+              on:click={downloadFile}>{$_('download')}</button>
+            <img src={imageURL} alt={document.label} width="400" />
+          </div>
+        {:else}
+          <p>{$_('no_image')}</p>
+        {/if}
+      </div>
+    </div>
+  </Collapse>
 </div>

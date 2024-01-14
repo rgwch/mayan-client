@@ -1,4 +1,5 @@
-import type { Cabinet, Document, Tag, DocumentType } from "./types";
+import type { Cabinet, Document, Tag, DocumentType, Favorite } from "./types";
+import { store } from "./store"
 import axios from 'axios'
 const API = "/api/v4/"
 axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -134,8 +135,12 @@ export class Mayan {
           url: page
         })
         const json = result.data;
-        ret = ret.concat(json.results);
-        page = this.normalizeURL(json.next);
+        if (json.results && Array.isArray(json.results)) {
+          ret = ret.concat(json.results);
+          page = this.normalizeURL(json.next);
+        } else {
+          return [json]
+        }
       } catch (e) {
         console.log(e);
         return ret;
@@ -267,18 +272,39 @@ export class Mayan {
    * List all favourite documents of the current user
    * @returns
    */
-  public async listFavouriteDocuments(limit = 0): Promise<Array<Document>> {
-    const result = await this.request("documents/favorites/", limit);
-    return result.map(obj => obj.document)
+  public async listFavouriteDocuments(limit = 0): Promise<Array<Favorite>> {
+    return await this.request("documents/favorites/", limit);
   }
 
+  /**
+   * Add document to the current user's favorite list
+   * @param document 
+   * @returns 
+   */
   public async addToFavourites(document: Document): Promise<any> {
-  
-    return this.post("documents/favorites/", { document,user }, "POST");
+    return this.post("documents/favorites/", { document_id: document.id }, "POST");
   }
 
-  public async removeFromFavourites(document_id: number): Promise<any> {
-    return this.post("documents/favorites/" + document_id + "/", {}, "DELETE");
+  /**
+   * remove document from the current user's favorite list
+   * @param document_id 
+   * @returns true on success
+   */
+  public async removeFromFavourites(document_id: number): Promise<boolean> {
+    try {
+      const favs = await store.getFavourites(false)
+      const fav = favs.find(fav => fav.document.id == document_id)
+      if (fav) {
+        const result = await axios({
+          method: "DELETE",
+          url: this.url + "documents/favorites/" + fav.id + "/"
+        })
+        return true
+      }
+    } catch (err) {
+      console.log(err)
+    }
+    return false
   }
   /**
    * List all available document types

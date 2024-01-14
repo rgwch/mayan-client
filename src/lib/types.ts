@@ -9,6 +9,15 @@ export type Cabinet = {
     url: string
 }
 
+export type Favorite = {
+    id: number
+    document: Document
+    user: User,
+    datetime_added: string,
+    url: string
+
+
+}
 export type Document = {
     datetime_created: string
     description: string
@@ -99,4 +108,18 @@ export type PageList = {
     next: string
     previous: string
     results: Array<DocumentVersionPage>
+}
+
+export type User = {
+    username: string
+    first_name: string
+    last_name: string
+    date_joined: string
+    email: string
+    groups_url: string
+    id: number
+    is_active: boolean
+    last_login: string
+    url: string
+
 }
