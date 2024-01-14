@@ -1,3 +1,4 @@
+/* Most styling is made with tailwind css. Here are only some common elements. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

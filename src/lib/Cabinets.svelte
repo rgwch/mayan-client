@@ -1,3 +1,4 @@
+<!-- Left column on PC displays, top row on mobile devices -->
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
   import { _ } from 'svelte-i18n';
@@ -20,6 +21,7 @@
   });
 </script>
 
+<!-- List of all cabinets -->
 <h1 class="text-xl font-bold">{$_('cabinets')}</h1>
 {#each toplevel as cabinet}
   <ul>
@@ -41,11 +43,13 @@
     {/if}
   </ul>
 {/each}
+<!-- collections not correlated to a single cabinet -->
 <h1 class="text-xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
   {$_('all')}
 </h1>
 <ul>
   <li>
+    <!-- Favorites -->
     <a
       href="#/"
       on:click={() =>
@@ -53,6 +57,7 @@
       >{$_('favorites')}</a>
   </li>
   <li>
+    <!-- last created -->
     <a
       href="#/"
       on:click={() =>
@@ -60,6 +65,7 @@
       >{$_('lastcreated')}</a>
   </li>
   <li>
+    <!-- last accessed -->
     <a
       href="#/"
       on:click={() =>
@@ -67,11 +73,13 @@
       >{$_('lastaccessed')}</a>
   </li>
   <li>
+    <!-- matching a search term -->
     <Search
       on:search={(event) =>
         dispatch('selected', { id: -5, full_path: event.detail })}></Search>
   </li>
 </ul>
+<!-- having a tag -->
 <div class="mt-3">
   <Dropdown
     title={$_('tags')}
@@ -85,11 +93,13 @@
       })} />
 </div>
 
+<!-- Create/Upload documents -->
 <div>
   <div class="mt-4 pt-2 border-t-2 border-blue-200">
     <p class="text-center text-xl font-bold">{$_('create')}</p>
     <Uploader></Uploader>
   </div>
+  <!-- Logout -->
   <div class="border-t-2 mt-4 border-blue-200">
     <button class="mt-4 large mx-auto" on:click={() => mayan.logout()}
       >{$_('logout')}</button>

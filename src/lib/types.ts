@@ -1,3 +1,6 @@
+/**
+ * Some Mayan EDMS API types needed here.
+ */
 export type Cabinet = {
     children: Array<Cabinet>
     documents_url: string

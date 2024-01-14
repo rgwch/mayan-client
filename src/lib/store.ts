@@ -1,3 +1,6 @@
+/**
+ * Cache some expensive operations
+ */
 import { _ } from 'svelte-i18n';
 import type { Tag, Cabinet, Favorite, DocumentType } from './types';
 import { mayan } from './mayan';

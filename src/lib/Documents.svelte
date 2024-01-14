@@ -1,3 +1,4 @@
+<!-- Right panel on PC displays, bottom portion on mobile devices: List of documents according to current selection-->
 <script lang="ts">
   import DocumentDisplay from './Document.svelte';
   import { _ } from 'svelte-i18n';

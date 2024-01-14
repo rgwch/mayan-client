@@ -1,3 +1,4 @@
+<!-- Search box to filter documents -->
 <script lang="ts">
     import { _ } from 'svelte-i18n';
     import { createEventDispatcher } from 'svelte';

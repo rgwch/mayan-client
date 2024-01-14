@@ -1,3 +1,4 @@
+<!-- Main view. Loaded by main.ts and holding sub-views -->
 <script lang="ts">
   import Cabinets from './lib/Cabinets.svelte';
   import Documents from './lib/Documents.svelte';
@@ -9,6 +10,9 @@
   let pwd: string;
   let autologin: boolean = false;
 
+  /**
+   * If we can resume a previous session, we don't need to show the login screen
+   */
   mayan.canResume().then((can) => {
     showlogin = !can;
   });
@@ -32,7 +36,7 @@
 
 <main class="container p-3 mx-auto">
   {#if showlogin}
-  <h1 class="text-2xl font-bold text-center mx-auto">Nito</h1>
+    <h1 class="text-2xl font-bold text-center mx-auto">Nito</h1>
     <div
       class="flex flex-col w-full md:w-1/3 mx-auto border-blue-600 border p-5 mt-5 text-lg">
       <input
@@ -63,7 +67,6 @@
         {$_('privacy')}
       </div>
     </div>
-   
   {:else}
     <div class="flex flex-col md:flex-row">
       <div class="mr-3 p-2 border-r border-blue-200">

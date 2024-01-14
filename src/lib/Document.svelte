@@ -1,3 +1,4 @@
+<!-- Display a single document -->
 <script lang="ts">
   import { mayan } from './mayan';
   import { DateTime } from 'luxon';
@@ -127,6 +128,7 @@
           {$_('favorite')}
         </div>
       </div>
+      <!-- Show associated cabinets and allow adding and removing -->
       <div class="flex flex-row border p-2 w-full">
         {#each cabinets as cab}
           <Badge
@@ -144,7 +146,7 @@
           left={false}
           on:selected={(c) => addCabinet(c)} />
       </div>
-
+      <!-- Show associated tags and allow adding and removing -->
       <div class="flex flex-row border bg-blue-100 my-1 p-2 w-full">
         {#each tags as tag}
           <Badge
@@ -163,6 +165,7 @@
           on:selected={addTag}>
         </Dropdown>
       </div>
+      <!-- Show descrition and allow editing. Save on focus lost -->
       <Card heading={$_('description')}>
         <textarea
           class="w-full"
@@ -170,6 +173,7 @@
           placeholder={$_('no_description')}
           bind:value={document.description} />
       </Card>
+      <!-- Show preview images and allow navigation and download -->
       <div class="border border-blue-200 m-2 p-2">
         {#if imageURL}
           <div class="border border-blue-100 m-2 p-2">

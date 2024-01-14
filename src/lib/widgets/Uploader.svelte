@@ -1,3 +1,4 @@
+<!-- Select a file to upload to Mayan-->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { _ } from 'svelte-i18n';
@@ -17,8 +18,7 @@
     const result = await mayan.createDocument(
       selectedType,
       selectedCabinet?.id,
-      selectedFile.name,
-      'deu',
+      'deu', // TODO generalize
       selectedFile,
     );
     if (result) {

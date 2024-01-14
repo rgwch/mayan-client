@@ -1,3 +1,7 @@
+/**
+ * This file contains the Mayan class which is used to communicate with the Mayan EDMS API. 
+ * All API calls happen here. All are asynchronous and return a Promise.
+ */
 import type { Cabinet, Document, Tag, DocumentType, Favorite } from "./types";
 import { store } from "./store"
 import axios from 'axios'
@@ -36,6 +40,7 @@ export class Mayan {
     if (json) {
       this.token = json.token;
       axios.defaults.headers.common['Authorization'] = `Token ${this.token}`
+      /* If the user wants to stay logged in: Store token and url */
       if (resumable) {
         localStorage.setItem("token", this.token);
         localStorage.setItem("url", this.url);
@@ -45,15 +50,19 @@ export class Mayan {
       return false;
     }
   }
+  /**
+   * Logout from the current session. The token is removed from the local storage and from axios.
+   */
+
   public logout() {
     localStorage.removeItem("token");
+    axios.defaults.headers.common['Authorization'] = undefined
     localStorage.setItem("url", this.url.substring(0, this.url.length - API.length));
-    // localStorage.removeItem("url");
     window.location.reload();
   }
 
   /**
-   * Check if a previous session can be resumed (and resume it)
+   * Check if a previous session can be resumed with a previously stored token (and resume it, of so).
    * @returns true if a previous session was resumed
    */
   public async canResume(): Promise<boolean> {
@@ -61,10 +70,11 @@ export class Mayan {
     this.url = localStorage.getItem("url") ?? "";
     if (this.token.length > 0 && this.url.length > 0) {
       try {
-        const test = await this.request("cabinets/", 1);
         axios.defaults.headers.common['Authorization'] = `Token ${this.token}`
+        const test = await this.request("cabinets/", 1);
         return true;
       } catch (err) {
+        axios.defaults.headers.common['Authorization'] = undefined
         return false;
       }
     }
@@ -352,9 +362,19 @@ export class Mayan {
     return this.post("documents/" + document.id + "/tags/remove/", { tag: tag.id }, "POST");
   }
 
+  /**
+   * List all documents with a given tag
+   * @param tag 
+   * @returns 
+   */
   public async listDocumentsWithTag(tag: Tag): Promise<Array<Document>> {
     return this.request("tags/" + tag.id + "/documents/");
   }
+  /**
+   * List all documents with a given tag id
+   * @param id 
+   * @returns 
+   */
   public async listDocumentsWithTagId(id: number): Promise<Array<Document>> {
     return this.request("tags/" + id + "/documents/");
   }
@@ -385,11 +405,10 @@ export class Mayan {
    * Create a new document
    * @param type 
    * @param description 
-   * @param label 
    * @param language 
    * @returns 
    */
-  public async createDocument(type: DocumentType, cabinet_id: number, label: string, language: string = "deu", file: File): Promise<Document> {
+  public async createDocument(type: DocumentType, cabinet_id: number, language: string = "deu", file: File): Promise<Document> {
     const body = {
       document_type_id: type.id,
       label: file.name,
