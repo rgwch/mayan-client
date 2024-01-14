@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+deploy
+dist.tar.gz
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +25,5 @@ dist-ssr
 *.sln
 *.sw?
 .env
+.user
+

@@ -20,7 +20,7 @@ cd mayan client
 npm i
 npm run dev
 ```
-and navigate your favorite browser to http://localhost:5137
+and navigate your favorite browser to http://localhost:5137. At the welcome screen, enter the URL for your Mayan-Server (including https://) and your credentials. 
 
 ## Deployment
 

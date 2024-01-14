@@ -273,7 +273,8 @@ export class Mayan {
   }
 
   public async addToFavourites(document: Document): Promise<any> {
-    return this.post("documents/favorites/", { document }, "POST");
+  
+    return this.post("documents/favorites/", { document,user }, "POST");
   }
 
   public async removeFromFavourites(document_id: number): Promise<any> {
