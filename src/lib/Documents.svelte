@@ -53,6 +53,7 @@
           <div class="flex justify-center">
             <div
               class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16">
+              <img src="/loading.gif" alt="loading...">
             </div>
           </div>
         </li>
