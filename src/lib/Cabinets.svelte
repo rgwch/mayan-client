@@ -24,7 +24,6 @@
 <!-- List of all cabinets -->
 <div class="flex flex-row">
 <h1 class="text-xl font-bold">{$_('cabinets')}</h1>
-<button>create</button>
 </div>
 {#each toplevel as cabinet}
   <ul>
