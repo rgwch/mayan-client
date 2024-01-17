@@ -6,6 +6,7 @@
     export let tree: Tree<any>;
 
     async function expand() {
+        dispatch('selected', tree.payload);
         if (tree.props.expanded) {
             tree.removeChildren();
             tree.props.expanded = false;
@@ -13,7 +14,6 @@
         }
         await tree.getChildrenLazy();
         tree.props.expanded = true;
-        dispatch('selected', tree.payload);
     }
     function hasChildren() {
         return $cabinets.some((c) => c.parent_id === tree.payload.id);

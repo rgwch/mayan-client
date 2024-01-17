@@ -16,7 +16,6 @@
    */
   mayan.canResume().then((can) => {
     showlogin = !can;
-    init();
   });
   async function login() {
     try {
@@ -77,14 +76,16 @@
       </div>
     </div>
   {:else}
-    <div class="flex flex-col md:flex-row">
-      <div class="mr-3 p-2 border-r border-blue-200">
-        <Cabinets on:selected={selection} />
+    {#await init() then done}
+      <div class="flex flex-col md:flex-row">
+        <div class="mr-3 p-2 border-r border-blue-200">
+          <Cabinets on:selected={selection} />
+        </div>
+        <div class="mr-3 p-2 flex-1">
+          <Documents cabinet={selected} />
+        </div>
       </div>
-      <div class="mr-3 p-2 flex-1">
-        <Documents cabinet={selected} />
-      </div>
-    </div>
+    {/await}
   {/if}
 </main>
 
