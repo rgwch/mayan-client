@@ -2,9 +2,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { _ } from 'svelte-i18n';
-  import type { DocumentType, Cabinet } from '../types';
-  import { cabinets, documentTypes } from '../store';
-  import { mayan } from '../mayan';
+  import type { DocumentType, Cabinet } from '../model/types';
+  import { cabinets, documentTypes } from '../model/store';
+  import { mayan } from '../model/mayan';
   import Dropdown from './Dropdown.svelte';
   let selectedFile: File;
   let selectedType: DocumentType;

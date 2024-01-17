@@ -1,8 +1,8 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-  import { mayan } from '../mayan';
-  import { cabinets } from '../store';
-  import type { Cabinet, DocumentType, Tag } from '../types';
+  import { mayan } from '../model/mayan';
+  import { cabinets } from '../model/store';
+  import type { Cabinet, DocumentType, Tag } from '../model/types';
   import { onMount, createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
   import Dropdown from './Dropdown.svelte';

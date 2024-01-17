@@ -2,19 +2,21 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
   import { _ } from 'svelte-i18n';
-  import { mayan } from './mayan';
-  import { cabinets, documentTypes, tags } from './store';
-  import type { Cabinet, DocumentType, Tag } from './types';
+  import { mayan } from './model/mayan';
+  import { cabinets, documentTypes, tags } from './model/store';
+  import type { Cabinet, DocumentType, Tag } from './model/types';
   import Dropdown from './widgets/Dropdown.svelte';
   import Uploader from './widgets/Uploader.svelte';
   import Search from './widgets/Search.svelte';
   import CreateCabinet from './widgets/CreateCabinet.svelte';
-  import TreeView from './widgets/TreeView.svelte';
-  import { Tree } from './tree';
+  import { Tree } from './model/tree';
+  import { CabinetTreeLoader } from './model/treeloader';
+  import Treeview from './widgets/Treeview.svelte';
   const dispatch = createEventDispatcher();
-  $: toplevel = $cabinets
+  let toplevel: Array<Tree<Cabinet>> = $cabinets
     .filter((c) => c.parent_id === null)
-    .map((el) => new Tree<Cabinet>(null, el));
+    .map((c) => new Tree<Cabinet>(null, c, new CabinetTreeLoader()));
+
   let createPanel = false;
   function addedCabinet(event: any) {
     createPanel = false;
@@ -33,44 +35,14 @@
   <CreateCabinet on:created={addedCabinet}></CreateCabinet>
 {/if}
 <!-- List of all cabinets -->
-{#if true}
-  <ul>
-    {#each toplevel as tree}
-      <li on:click={() => (tree.props.expanded = !tree.props.expanded)}>
-        {#if tree.props.expanded}
-          -
-          {#each tree.getChildren() as cabinet}
-            child
-          {/each}
-        {:else}
-          o
-        {/if}
-        {tree.payload.label}
-      </li>
-    {/each}
-  </ul>
-{:else}
-  {#each toplevel as cabinet}
-    <ul>
-      <li>
-        <a href="#/" on:click={() => dispatch('selected', cabinet)}
-          >{cabinet.label}</a>
-      </li>
-      {#if cabinet.children.length}
-        <ul>
-          {#each cabinet.children as child}
-            <li>
-              <a
-                href="#/"
-                class="ml-3"
-                on:click={() => dispatch('selected', child)}>- {child.label}</a>
-            </li>
-          {/each}
-        </ul>
-      {/if}
-    </ul>
+<ul>
+  {#each toplevel as tree}
+    <li>
+      <Treeview {tree} on:selected></Treeview>
+    </li>
   {/each}
-{/if}
+</ul>
+
 <!-- collections not related to a single cabinet -->
 <h1 class="text-xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
   {$_('all')}

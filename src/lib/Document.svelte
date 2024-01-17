@@ -1,10 +1,10 @@
 <!-- Display a single document -->
 <script lang="ts">
-  import { mayan } from './mayan';
+  import { mayan } from './model/mayan';
   import { DateTime } from 'luxon';
   import { _ } from 'svelte-i18n';
-  import { cabinets, tags, favourites } from './store';
-  import type { Document, Tag, DocumentType, Cabinet } from './types';
+  import { cabinets, tags, favourites } from './model/store';
+  import type { Document, Tag, DocumentType, Cabinet } from './model/types';
   import Collapse from './widgets/Collapse.svelte';
   import Badge from './widgets/Badge.svelte';
   import Dropdown from './widgets/Dropdown.svelte';

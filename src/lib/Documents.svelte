@@ -2,9 +2,9 @@
 <script lang="ts">
   import DocumentDisplay from './Document.svelte';
   import { _ } from 'svelte-i18n';
-  import { mayan } from './mayan';
-  import type { Document, Cabinet } from './types';
-  import { cabinets } from './store';
+  import { mayan } from './model/mayan';
+  import type { Document, Cabinet } from './model/types';
+  import { cabinets } from './model/store';
   export let cabinet: Cabinet | null;
   let docs: Array<Document> | null = null;
 

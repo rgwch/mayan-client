@@ -2,9 +2,9 @@
 <script lang="ts">
   import Cabinets from './lib/Cabinets.svelte';
   import Documents from './lib/Documents.svelte';
-  import { mayan } from './lib/mayan';
+  import { mayan } from './lib/model/mayan';
   import { _, isLoading } from 'svelte-i18n';
-  import { init } from './lib/store';
+  import { init } from './lib/model/store';
   let showlogin = true;
   let url: string = localStorage.getItem('url') || '';
   let user: string;
