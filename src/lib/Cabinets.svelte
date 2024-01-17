@@ -9,13 +9,17 @@
   import Uploader from './widgets/Uploader.svelte';
   import Search from './widgets/Search.svelte';
   import CreateCabinet from './widgets/CreateCabinet.svelte';
+  import TreeView from './widgets/TreeView.svelte';
+  import { Tree } from './tree';
   const dispatch = createEventDispatcher();
-  $: toplevel = $cabinets.filter((c) => c.parent_id === null);
+  $: toplevel = $cabinets
+    .filter((c) => c.parent_id === null)
+    .map((el) => new Tree<Cabinet>(null, el));
   let createPanel = false;
   function addedCabinet(event: any) {
     createPanel = false;
     cabinets.set([...$cabinets, event.detail]);
-    toplevel = $cabinets.filter((c) => c.parent_id === null);
+    // toplevel = $cabinets.filter((c) => c.parent_id === null);
   }
 </script>
 
@@ -29,26 +33,44 @@
   <CreateCabinet on:created={addedCabinet}></CreateCabinet>
 {/if}
 <!-- List of all cabinets -->
-{#each toplevel as cabinet}
+{#if true}
   <ul>
-    <li>
-      <a href="#/" on:click={() => dispatch('selected', cabinet)}
-        >{cabinet.label}</a>
-    </li>
-    {#if cabinet.children.length}
-      <ul>
-        {#each cabinet.children as child}
-          <li>
-            <a
-              href="#/"
-              class="ml-3"
-              on:click={() => dispatch('selected', child)}>- {child.label}</a>
-          </li>
-        {/each}
-      </ul>
-    {/if}
+    {#each toplevel as tree}
+      <li on:click={() => (tree.props.expanded = !tree.props.expanded)}>
+        {#if tree.props.expanded}
+          -
+          {#each tree.getChildren() as cabinet}
+            child
+          {/each}
+        {:else}
+          o
+        {/if}
+        {tree.payload.label}
+      </li>
+    {/each}
   </ul>
-{/each}
+{:else}
+  {#each toplevel as cabinet}
+    <ul>
+      <li>
+        <a href="#/" on:click={() => dispatch('selected', cabinet)}
+          >{cabinet.label}</a>
+      </li>
+      {#if cabinet.children.length}
+        <ul>
+          {#each cabinet.children as child}
+            <li>
+              <a
+                href="#/"
+                class="ml-3"
+                on:click={() => dispatch('selected', child)}>- {child.label}</a>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+    </ul>
+  {/each}
+{/if}
 <!-- collections not related to a single cabinet -->
 <h1 class="text-xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
   {$_('all')}
