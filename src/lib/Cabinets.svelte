@@ -8,11 +8,20 @@
   import Dropdown from './widgets/Dropdown.svelte';
   import Uploader from './widgets/Uploader.svelte';
   import Search from './widgets/Search.svelte';
+  import CreateCabinet from './widgets/CreateCabinet.svelte';
   const dispatch = createEventDispatcher();
   let cabinets: Array<Cabinet> = [];
   let doctypes: Array<DocumentType> = [];
   let toplevel: Array<Cabinet> = [];
   let tags: Array<Tag> = [];
+  let createPanel = false;
+  function addPanel(event: any) {
+    store.getCabinets(true).then((c) => {
+      cabinets = c;
+      toplevel = cabinets.filter((c) => c.parent_id === null);
+    });
+    createPanel = false;
+  }
   onMount(async () => {
     cabinets = await store.getCabinets();
     toplevel = cabinets.filter((c) => c.parent_id === null);
@@ -21,10 +30,16 @@
   });
 </script>
 
-<!-- List of all cabinets -->
+<!-- create new cabinet -->
 <div class="flex flex-row">
-<h1 class="text-xl font-bold">{$_('cabinets')}</h1>
+  <h1 class="text-xl font-bold">{$_('cabinets')}</h1>
+  <button class="ml-3 text-xl" on:click={() => (createPanel = !createPanel)}
+    >⊕</button>
 </div>
+{#if createPanel}
+  <CreateCabinet on:created={addPanel}></CreateCabinet>
+{/if}
+<!-- List of all cabinets -->
 {#each toplevel as cabinet}
   <ul>
     <li>

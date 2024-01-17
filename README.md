@@ -54,7 +54,7 @@ Please note that above operations are only possible, if the logged-in user has t
 ## Localization
 
 Nito comes with german, english and french language files, being german the fallback. The language to use is taken from the browser's locale. You can also change the language by calling locale.set() in src/lib/i18n/i18n.ts.
-Adding new languanges is easy: Just create a file (e.g. it.json) with all the keys from de.json and translate the values. Then, add addMessages('it') to src/lib/i18n/i18n.ts.
+Adding new languanges is easy: Just create a file (e.g. it.json) with all the keys from de.json and translate the values. Then, add `register('it', () => import('./it.json'))` to src/lib/i18n/i18n.ts.
 
 ## Credits
 
