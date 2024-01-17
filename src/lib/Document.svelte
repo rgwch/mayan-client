@@ -144,7 +144,7 @@
       </div>
       <!-- Show associated tags and allow adding and removing -->
       <div class="flex flex-row border bg-blue-100 my-1 p-2 w-full">
-        {#each $tags as tag}
+        {#each assignedTags as tag}
           <Badge
             text={tag.label}
             textcolor={tag.color}
