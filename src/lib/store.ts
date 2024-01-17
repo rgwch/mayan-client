@@ -17,8 +17,8 @@ export class Store {
         }
         return this.tags
     }
-    public async getCabinets() {
-        if (this.cabinets.length == 0) {
+    public async getCabinets(reload: boolean = false) {
+        if (reload || this.cabinets.length == 0) {
             this.cabinets = await mayan.listCabinets();
         }
         return this.cabinets
