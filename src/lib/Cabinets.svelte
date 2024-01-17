@@ -12,9 +12,10 @@
   const dispatch = createEventDispatcher();
   $: toplevel = $cabinets.filter((c) => c.parent_id === null);
   let createPanel = false;
-  function addPanel(event: any) {
+  function addedCabinet(event: any) {
     createPanel = false;
     cabinets.set([...$cabinets, event.detail]);
+    toplevel = $cabinets.filter((c) => c.parent_id === null);
   }
 </script>
 
@@ -25,7 +26,7 @@
     >⊕</button>
 </div>
 {#if createPanel}
-  <CreateCabinet on:created={addPanel}></CreateCabinet>
+  <CreateCabinet on:created={addedCabinet}></CreateCabinet>
 {/if}
 <!-- List of all cabinets -->
 {#each toplevel as cabinet}
