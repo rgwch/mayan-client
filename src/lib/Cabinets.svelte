@@ -15,6 +15,10 @@
   let toplevel: Array<Cabinet> = [];
   let tags: Array<Tag> = [];
   let createPanel = false;
+  function addPanel(event: any) {
+    cabinets.push(event.detail);
+    createPanel = false;
+  }
   onMount(async () => {
     cabinets = await store.getCabinets();
     toplevel = cabinets.filter((c) => c.parent_id === null);
@@ -30,7 +34,7 @@
     >⊕</button>
 </div>
 {#if createPanel}
-  <CreateCabinet></CreateCabinet>
+  <CreateCabinet on:created={addPanel}></CreateCabinet>
 {/if}
 {#each toplevel as cabinet}
   <ul>

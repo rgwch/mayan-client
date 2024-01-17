@@ -4,13 +4,18 @@
   import { store } from "../store";
   import type { Cabinet, DocumentType, Tag } from "../types";
   import { onMount, createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
   import Dropdown from "./Dropdown.svelte";
   let selectedParent: Cabinet | null = null;
   let name: string = "";
   let cabinets: Array<Cabinet> = [];
   function createCabinet() {
     mayan.createCabinet(name, selectedParent?.id).then((result) => {
-      console.log(result);
+      if (result) {
+        name = "";
+        selectedParent = null;
+        dispatch("created", result)
+      }
     });
   }
   onMount(async () => {

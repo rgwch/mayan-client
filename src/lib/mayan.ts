@@ -214,13 +214,15 @@ export class Mayan {
     return this.request("cabinets/");
   }
 
-  public async createCabinet(name: string, parent: number = 0): Promise<Cabinet> {
-    if (parent != 0) {
+  public async createCabinet(name: string, parent: number | null = null): Promise<Cabinet> {
+    if (parent) {
       const parents: Array<Cabinet> = await this.listCabinets()
       const parentObj = parents.find(cab => cab.id == parent)
+      parent = parentObj?.id ?? null
     }
     const body = {
-      label: name
+      label: name,
+      parent
     };
     const created = await this.post("cabinets/", body);
     return created
