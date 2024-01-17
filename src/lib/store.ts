@@ -2,39 +2,20 @@
  * Cache some expensive operations
  */
 import { _ } from 'svelte-i18n';
-import type { Tag, Cabinet, Favorite, DocumentType } from './types';
 import { mayan } from './mayan';
+import type { Tag, Cabinet, Favorite, DocumentType } from './types';
+import { writable } from 'svelte/store';
 
-export class Store {
-    private tags: Tag[] = [];
-    private cabinets: Cabinet[] = [];
-    private documentTypes: DocumentType[] = [];
-    private favourites: Favorite[] = [];
+export const cabinets = writable<Cabinet[]>([]);
+export const documentTypes = writable<DocumentType[]>([]);
+export const tags = writable<Tag[]>([]);
+export const favourites = writable<Favorite[]>([]);
 
-    public async getTags() {
-        if (this.tags.length == 0) {
-            this.tags = await mayan.listTags();
-        }
-        return this.tags
-    }
-    public async getCabinets(reload: boolean = false) {
-        if (reload || this.cabinets.length == 0) {
-            this.cabinets = await mayan.listCabinets();
-        }
-        return this.cabinets
-    }
-    public async getDocumentTypes() {
-        if (this.documentTypes.length == 0) {
-            this.documentTypes = await mayan.listDocumentTypes();
-        }
-        return this.documentTypes
-    }
-    public async getFavourites(reload: boolean = false) {
-        if (reload || (this.favourites.length === 0)) {
-            this.favourites = await mayan.listFavouriteDocuments()
-        }
-        return this.favourites
-    }
+export const init = async () => {
+    cabinets.set(await mayan.listCabinets())
+    tags.set(await mayan.listTags());
+    documentTypes.set(await mayan.listDocumentTypes());
+    favourites.set(await mayan.listFavouriteDocuments())
 }
 
-export const store = new Store();
+

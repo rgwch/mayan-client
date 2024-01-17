@@ -1,11 +1,12 @@
 <!-- Main view. Loaded by main.ts and holding sub-views -->
 <script lang="ts">
-  import Cabinets from "./lib/Cabinets.svelte";
-  import Documents from "./lib/Documents.svelte";
-  import { mayan } from "./lib/mayan";
-  import { _, isLoading } from "svelte-i18n";
+  import Cabinets from './lib/Cabinets.svelte';
+  import Documents from './lib/Documents.svelte';
+  import { mayan } from './lib/mayan';
+  import { _, isLoading } from 'svelte-i18n';
+  import { init } from './lib/store';
   let showlogin = true;
-  let url: string = localStorage.getItem("url") || "";
+  let url: string = localStorage.getItem('url') || '';
   let user: string;
   let pwd: string;
   let autologin: boolean = false;
@@ -15,6 +16,7 @@
    */
   mayan.canResume().then((can) => {
     showlogin = !can;
+    init();
   });
   async function login() {
     try {
@@ -22,10 +24,10 @@
       if (ok) {
         showlogin = false;
       } else {
-        alert($_("login_failed"));
+        alert($_('login_failed'));
       }
     } catch (e: any) {
-      alert($_("login_failed") + e.message);
+      alert($_('login_failed') + e.message);
     }
   }
   let selected: any = null;
@@ -55,23 +57,23 @@
         class="mb-2"
         type="text"
         bind:value={user}
-        placeholder={$_("username")} />
+        placeholder={$_('username')} />
       <input
         class="mb-2"
         type="password"
         bind:value={pwd}
-        placeholder={$_("password")} />
+        placeholder={$_('password')} />
       <div class="mb-2 mt-1 flex flex-row">
         <input
           class="mr-2"
           type="checkbox"
           id="autologin"
           bind:checked={autologin} />
-        <label for="autologin">{$_("stay_logged_in")}</label>
+        <label for="autologin">{$_('stay_logged_in')}</label>
       </div>
-      <button class="large mt-3" on:click={login}>{$_("login")}</button>
+      <button class="large mt-3" on:click={login}>{$_('login')}</button>
       <div class="mt-8 mx-auto font-semibold text-sm text-center">
-        {$_("privacy")}
+        {$_('privacy')}
       </div>
     </div>
   {:else}

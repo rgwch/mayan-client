@@ -1,38 +1,34 @@
 <script lang="ts">
-  import { _ } from "svelte-i18n";
-  import { mayan } from "../mayan";
-  import { store } from "../store";
-  import type { Cabinet, DocumentType, Tag } from "../types";
-  import { onMount, createEventDispatcher } from "svelte";
+  import { _ } from 'svelte-i18n';
+  import { mayan } from '../mayan';
+  import { cabinets } from '../store';
+  import type { Cabinet, DocumentType, Tag } from '../types';
+  import { onMount, createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
-  import Dropdown from "./Dropdown.svelte";
+  import Dropdown from './Dropdown.svelte';
   let selectedParent: Cabinet | null = null;
-  let name: string = "";
-  let cabinets: Array<Cabinet> = [];
+  let name: string = '';
   function createCabinet() {
     mayan.createCabinet(name, selectedParent?.id).then((result) => {
       if (result) {
-        name = "";
+        name = '';
         selectedParent = null;
-        dispatch("created", result)
+        dispatch('created', result);
       }
     });
   }
-  onMount(async () => {
-    cabinets = await store.getCabinets();
-  });
 </script>
 
 <div class="flex flex-col">
   <Dropdown
-    title={$_("parent")}
-    elements={cabinets}
+    title={$_('parent')}
+    elements={$cabinets}
     label={(c) => c.label}
     bind:selected={selectedParent}></Dropdown>
   <input
     type="text"
-    placeholder={$_("name")}
+    placeholder={$_('name')}
     bind:value={name}
     class="border-2 border-gray-200 rounded-md p-2" />
-  <button class="large" on:click={createCabinet}> {$_("create")}</button>
+  <button class="large" on:click={createCabinet}> {$_('create')}</button>
 </div>

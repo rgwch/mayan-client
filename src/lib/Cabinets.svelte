@@ -3,31 +3,19 @@
   import { onMount, createEventDispatcher } from 'svelte';
   import { _ } from 'svelte-i18n';
   import { mayan } from './mayan';
-  import { store } from './store';
+  import { cabinets, documentTypes, tags } from './store';
   import type { Cabinet, DocumentType, Tag } from './types';
   import Dropdown from './widgets/Dropdown.svelte';
   import Uploader from './widgets/Uploader.svelte';
   import Search from './widgets/Search.svelte';
   import CreateCabinet from './widgets/CreateCabinet.svelte';
   const dispatch = createEventDispatcher();
-  let cabinets: Array<Cabinet> = [];
-  let doctypes: Array<DocumentType> = [];
-  let toplevel: Array<Cabinet> = [];
-  let tags: Array<Tag> = [];
+  $: toplevel = $cabinets.filter((c) => c.parent_id === null);
   let createPanel = false;
   function addPanel(event: any) {
-    store.getCabinets(true).then((c) => {
-      cabinets = c;
-      toplevel = cabinets.filter((c) => c.parent_id === null);
-    });
     createPanel = false;
+    cabinets.set([...$cabinets, event.detail]);
   }
-  onMount(async () => {
-    cabinets = await store.getCabinets();
-    toplevel = cabinets.filter((c) => c.parent_id === null);
-    doctypes = await store.getDocumentTypes();
-    tags = await store.getTags();
-  });
 </script>
 
 <!-- create new cabinet -->
@@ -60,7 +48,7 @@
     {/if}
   </ul>
 {/each}
-<!-- collections not correlated to a single cabinet -->
+<!-- collections not related to a single cabinet -->
 <h1 class="text-xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
   {$_('all')}
 </h1>
@@ -100,7 +88,7 @@
 <div class="mt-3">
   <Dropdown
     title={$_('tags')}
-    elements={tags}
+    elements={$tags}
     label={(t) => t.label}
     on:selected={(t) =>
       dispatch('selected', {

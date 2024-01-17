@@ -3,12 +3,10 @@
   import { onMount } from 'svelte';
   import { _ } from 'svelte-i18n';
   import type { DocumentType, Cabinet } from '../types';
-  import { store } from '../store';
+  import { cabinets, documentTypes } from '../store';
   import { mayan } from '../mayan';
   import Dropdown from './Dropdown.svelte';
   let selectedFile: File;
-  let documentTypes: Array<DocumentType> = [];
-  let cabinets: Array<Cabinet> = [];
   let selectedType: DocumentType;
   let selectedCabinet: Cabinet;
   let buttontext = $_('upload');
@@ -16,7 +14,7 @@
   async function uploadFile(): Promise<boolean> {
     buttontext = $_('wait');
     const result = await mayan.createDocument(
-      selectedType ?? documentTypes[0],
+      selectedType ?? $documentTypes[0],
       selectedCabinet?.id,
       'deu', // TODO generalize
       selectedFile,
@@ -37,22 +35,18 @@
     }
   }
   let inputlabel = $_('file');
-  onMount(async () => {
-    documentTypes = await store.getDocumentTypes();
-    cabinets = await store.getCabinets();
-  });
 </script>
 
 <div class="flex flex-col mt-4 mr-4">
   <Dropdown
     title={$_('doctype')}
-    elements={documentTypes}
+    elements={$documentTypes}
     bind:selected={selectedType}
     label={(x) => x.label} />
 
   <Dropdown
     title={$_('cabinet')}
-    elements={cabinets}
+    elements={$cabinets}
     label={(x) => x.label}
     bind:selected={selectedCabinet} />
   <input
