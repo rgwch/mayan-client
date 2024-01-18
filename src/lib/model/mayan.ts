@@ -214,6 +214,12 @@ export class Mayan {
     return this.request("cabinets/");
   }
 
+  /**
+   * Create a new cabinet
+   * @param name label for the cabinet
+   * @param parent null to create toplevel cabinet, or the id of the parent cabinet
+   * @returns tne newly created cabinet
+   */
   public async createCabinet(name: string, parent: number | null = null): Promise<Cabinet> {
     if (parent) {
       const parents: Array<Cabinet> = await this.listCabinets()
@@ -227,6 +233,11 @@ export class Mayan {
     const created = await this.post("cabinets/", body);
     return created
   }
+  /**
+   * Remove a cabinet
+   * @param cabinet_id 
+   * @returns true on success
+   */
   public async deleteCabinet(cabinet_id: number): Promise<boolean> {
     try {
       await axios({
@@ -472,6 +483,11 @@ export class Mayan {
 
   }
 
+  /**
+   * retrieve documents matching a given query
+   * @param query a search term
+   * @returns the list of matching documents
+   */
   public async filterByContent(query: string): Promise<Array<Document>> {
     return this.request("search/documents.documentsearchresult?q=" + query);
   }

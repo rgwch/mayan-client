@@ -88,7 +88,6 @@
   {:else}
     <p class="mx-auto mt-5">
       {$_('select_cabinet')}
-      <a href="#/" on:click={mayan.logout}>{$_('logout')}</a>
     </p>
   {/if}
 </div>

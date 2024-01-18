@@ -13,3 +13,4 @@ init({
 
 // To change the locale for testing:
 // locale.set('en')
+// (or set the browser language to en)

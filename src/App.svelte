@@ -61,6 +61,11 @@
         class="mb-2"
         type="password"
         bind:value={pwd}
+        on:keypress={(e) => {
+          if (e.key === 'Enter') {
+            login();
+          }
+        }}
         placeholder={$_('password')} />
       <div class="mb-2 mt-1 flex flex-row">
         <input

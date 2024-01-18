@@ -4,6 +4,9 @@ import type { Cabinet } from './types';
 let cabs: Array<Cabinet> = []
 cabinets.subscribe(c => cabs = c)
 
+/**
+ * A TreeLoader that loads children from the cabinets store
+ */
 export class CabinetTreeLoader implements ITreeListener {
 
     fetchChildren(t: Tree<Cabinet>): Promise<boolean> {

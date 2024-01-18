@@ -71,8 +71,8 @@
         To: "transform opacity-0 scale-95"
     -->
     {#if open}
-        <div
-            class="absolute z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        <div 
+            class="absolute z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60"
             class:left-0={left}
             class:right-0={!left}
             role="menu"

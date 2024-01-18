@@ -1,3 +1,6 @@
+/**
+ * A Tree is a node in a tree structure. It has a payload and a list of children.
+ */
 export interface IComparator<T> {
   compare(a: T, b: T): number
 }
@@ -11,8 +14,8 @@ export class Tree<T> {
   public props: any = {}
 
   /**
-   * @param parent
-   * @param payload
+   * @param parent  - If null, this is the root node
+   * @param payload - The payload of the node
    * @param listener - If a tree has a listener, it becomes a LazyTree, i.e. loads children only when fetch() is called.
    */
   constructor(
@@ -27,6 +30,10 @@ export class Tree<T> {
     }
   }
 
+  /**
+   * get Children of this node synchronously
+   * @returns 
+   */
   public getChildren(): Array<Tree<T>> {
     const ret = new Array<Tree<T>>()
     let runner = this._first
@@ -36,16 +43,27 @@ export class Tree<T> {
     }
     return ret
   }
+
+  /**
+   * ger Children of this node asynchronously (nees a listener)
+   * @returns 
+   */
   public async getChildrenLazy(): Promise<Array<Tree<T>>> {
     if (this.listener) {
       const result = await this.listener.fetchChildren(this)
     }
     return this.getChildren()
   }
+  /**
+   * remove all children of this node
+   */
   public removeChildren() {
     this._first?.removeSiblings()
     this._first = null
   }
+  /**
+   * remove all siblings of this node
+   */
   public removeSiblings() {
     if (this._next) {
       this._next.removeSiblings()
@@ -76,7 +94,7 @@ export class Tree<T> {
   }
 
   /**
-   * Removes a tree from its parent and sisters (if any)
+   * Removes a tree from its parent and siblings (if any)
    */
   public remove() {
     if (this.parent) {
@@ -124,16 +142,29 @@ export class Tree<T> {
   get payload() {
     return this._payload
   }
+  /**
+   * returns the next sibling of this node or null if there is none
+   */
   get next() {
     return this._next
   }
+  /**
+   * returns the first child of this node or null if there is none
+   */
   get first() {
     return this._first
   }
+  /**
+   * returns the parent of this node or null if this is the root node
+   */
   get parent() {
     return this._parent
   }
 
+  /**
+   * collect all payloads of this tree and its children
+   * @returns an array of payloads
+   */
   async toObject(): Promise<any> {
     return {
       children: await (await this.getChildrenLazy()).map(n => n.toObject()),
