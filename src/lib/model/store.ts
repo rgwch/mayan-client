@@ -1,5 +1,5 @@
 /**
- * Cache some expensive operations
+ * Svelte store for global state
  */
 import { _ } from 'svelte-i18n';
 import { mayan } from './mayan';
@@ -11,6 +11,9 @@ export const documentTypes = writable<DocumentType[]>([]);
 export const tags = writable<Tag[]>([]);
 export const favourites = writable<Favorite[]>([]);
 
+/**
+ * Initialize the store with data from the server. Data is ready when the promise resolves.
+ */
 export const init = async () => {
     cabinets.set(await mayan.listCabinets())
     tags.set(await mayan.listTags());

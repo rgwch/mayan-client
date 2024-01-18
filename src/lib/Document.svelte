@@ -136,7 +136,7 @@
         <div class="flex-grow"></div>
         <Dropdown
           title={$_('add_cabinet')}
-          elements={$cabinets}
+          elements={$cabinets.sort((a, b) => a.full_path.localeCompare(b.full_path))}
           small={true}
           label={(c) => c.full_path}
           left={false}
