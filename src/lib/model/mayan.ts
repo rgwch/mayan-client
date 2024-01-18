@@ -29,6 +29,8 @@ export class Mayan {
     if (!url) throw new Error("URL is required")
     if (!username) throw new Error("Username is required")
     if (!password) throw new Error("Password is required")
+    if(url.endsWith(API)) url = url.slice(0, -API.length)
+    if(!url.startsWith("http")) url = "https://" + url
     if (url.endsWith("/")) url = url.slice(0, -1);
     this.url = url + API;
     const body = {
@@ -90,7 +92,7 @@ export class Mayan {
   public normalizeURL(url: string): string {
     if (!url || url.startsWith(this.url)) return url;
     const internal = url.substring(
-      url.indexOf("/api/v4/") + "api/v4/".length + 1
+      url.indexOf(API) + API.length 
     );
     return this.url + internal;
   }
@@ -102,7 +104,7 @@ export class Mayan {
   public stripURL(url: string): string {
     if (!url) return url;
     const internal = url.substring(
-      url.indexOf("/api/v4/") + "api/v4/".length + 1
+      url.indexOf(API) + API.length 
     );
     return internal;
   }
