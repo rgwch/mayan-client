@@ -1,10 +1,10 @@
 <!-- Display a single document -->
 <script lang="ts">
-  import { mayan } from './mayan';
+  import { mayan } from './model/mayan';
   import { DateTime } from 'luxon';
   import { _ } from 'svelte-i18n';
-  import { store } from './store';
-  import type { Document, Tag, DocumentType, Cabinet } from './types';
+  import { cabinets, tags, favourites } from './model/store';
+  import type { Document, Tag, DocumentType, Cabinet } from './model/types';
   import Collapse from './widgets/Collapse.svelte';
   import Badge from './widgets/Badge.svelte';
   import Dropdown from './widgets/Dropdown.svelte';
@@ -13,15 +13,11 @@
   let imageURL: any;
   let isOpen: boolean = false;
   let imageList: Array<string>;
-  let tags: Array<Tag> = [];
-  let allTags: Array<Tag> = [];
+  let assignedTags: Array<Tag> = [];
   let currentImage: number = 0;
-  let cabinets: Array<Cabinet> = [];
-  let allCabinets: Array<Cabinet> = [];
+  let assignedCabinets: Array<Cabinet> = [];
   let isFavorite: boolean = false;
   let title: string = $_('wait');
-  store.getTags().then((t) => (allTags = t));
-  store.getCabinets().then((c) => (allCabinets = c));
   makeTitle();
   async function load() {
     if (isOpen) {
@@ -32,8 +28,8 @@
           currentImage = 0;
         }
       }
-      tags = await mayan.listTagsForDocument(document);
-      cabinets = await mayan.listCabinetsOfDocument(document);
+      assignedTags = await mayan.listTagsForDocument(document);
+      assignedCabinets = await mayan.listCabinetsOfDocument(document);
     } else {
       URL.revokeObjectURL(imageURL);
     }
@@ -69,22 +65,22 @@
   }
   async function removeTag(tag: Tag) {
     await mayan.removeTagFromDocument(document, tag);
-    tags = await mayan.listTagsForDocument(document);
+    assignedTags = await mayan.listTagsForDocument(document);
   }
   async function addTag(event: any) {
     await mayan.addTagToDocument(document, event.detail);
-    tags = await mayan.listTagsForDocument(document);
+    assignedTags = await mayan.listTagsForDocument(document);
   }
   async function addCabinet(event: any) {
     await mayan.addDocumentToCabinet(document.id, event.detail?.id);
-    cabinets = await mayan.listCabinetsOfDocument(document);
+    assignedCabinets = await mayan.listCabinetsOfDocument(document);
   }
   async function removeCabinet(cab: Cabinet) {
     await mayan.removeDocumentFromCabinet(document.id, cab);
-    cabinets = await mayan.listCabinetsOfDocument(document);
+    assignedCabinets = await mayan.listCabinetsOfDocument(document);
   }
   async function makeTitle(): Promise<string> {
-    const favs = (await store.getFavourites()).map((f) => f.document);
+    const favs = $favourites.map((f) => f.document);
     title =
       document.label +
       ' (' +
@@ -103,7 +99,7 @@
     } else {
       await mayan.removeFromFavourites(document.id);
     }
-    await store.getFavourites(true);
+    favourites.set(await mayan.listFavouriteDocuments());
     await makeTitle();
   }
 </script>
@@ -130,7 +126,7 @@
       </div>
       <!-- Show associated cabinets and allow adding and removing -->
       <div class="flex flex-row border p-2 w-full">
-        {#each cabinets as cab}
+        {#each assignedCabinets as cab}
           <Badge
             text={cab.full_path}
             textcolor={'#000000'}
@@ -140,7 +136,7 @@
         <div class="flex-grow"></div>
         <Dropdown
           title={$_('add_cabinet')}
-          elements={allCabinets}
+          elements={$cabinets}
           small={true}
           label={(c) => c.full_path}
           left={false}
@@ -148,7 +144,7 @@
       </div>
       <!-- Show associated tags and allow adding and removing -->
       <div class="flex flex-row border bg-blue-100 my-1 p-2 w-full">
-        {#each tags as tag}
+        {#each assignedTags as tag}
           <Badge
             text={tag.label}
             textcolor={tag.color}
@@ -158,7 +154,7 @@
         <div class="flex-grow"></div>
         <Dropdown
           title={$_('add_tag')}
-          elements={allTags}
+          elements={$tags}
           small={true}
           label={(t) => t.label}
           left={false}

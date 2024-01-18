@@ -2,14 +2,14 @@
  * Some Mayan EDMS API types needed here.
  */
 export type Cabinet = {
-    children: Array<Cabinet>
-    documents_url: string
+    children?: Array<Cabinet>
+    documents_url?: string
     full_path: string
     id: number
     label: string
-    parent_id: number
-    parent_url: string
-    url: string
+    parent_id: number | null
+    parent_url?: string
+    url?: string
 }
 
 export type Favorite = {

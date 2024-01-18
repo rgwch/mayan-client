@@ -3,7 +3,7 @@
  * All API calls happen here. All are asynchronous and return a Promise.
  */
 import type { Cabinet, Document, Tag, DocumentType, Favorite } from "./types";
-import { store } from "./store"
+
 import axios from 'axios'
 const API = "/api/v4/"
 axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -227,6 +227,18 @@ export class Mayan {
     const created = await this.post("cabinets/", body);
     return created
   }
+  public async deleteCabinet(cabinet_id: number): Promise<boolean> {
+    try {
+      await axios({
+        method: "DELETE",
+        url: this.url + "cabinets/" + cabinet_id + "/"
+      })
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  }
   /**
    * List all cabinets a document is in
    * @param document 
@@ -315,7 +327,7 @@ export class Mayan {
    */
   public async removeFromFavourites(document_id: number): Promise<boolean> {
     try {
-      const favs = await store.getFavourites(false)
+      const favs = await this.listFavouriteDocuments()
       const fav = favs.find(fav => fav.document.id == document_id)
       if (fav) {
         const result = await axios({
