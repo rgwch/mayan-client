@@ -3,11 +3,11 @@
   import { mayan } from "./model/mayan";
   import { DateTime } from "luxon";
   import { _ } from "svelte-i18n";
+  import { slide } from "svelte/transition";
   import { cabinets, tags, favourites } from "./model/store";
   import type { Document, Tag, DocumentType, Cabinet } from "./model/types";
   import Fa from "svelte-fa";
   import { faPen, faStar } from "@fortawesome/free-solid-svg-icons";
-  import Collapse from "./widgets/Collapse.svelte";
   import Badge from "./widgets/Badge.svelte";
   import Dropdown from "./widgets/Dropdown.svelte";
   import Card from "./widgets/Card.svelte";
@@ -20,8 +20,10 @@
   let assignedCabinets: Array<Cabinet> = [];
   let isFavorite: boolean = false;
   let title: string = $_("wait");
+  let editingTitle: boolean = false;
   makeTitle();
   async function load() {
+    isOpen = !isOpen;
     if (isOpen) {
       if (document.version_active?.page_list_url) {
         imageList = await mayan.getImageURLs(document);
@@ -81,6 +83,11 @@
     await mayan.removeDocumentFromCabinet(document.id, cab);
     assignedCabinets = await mayan.listCabinetsOfDocument(document);
   }
+  async function editTitle() {
+    await mayan.updateDocument(document, { label: document.label });
+    await makeTitle();
+    editingTitle = false;
+  }
   async function makeTitle(): Promise<string> {
     const favs = $favourites.map((f) => f.document);
     title =
@@ -107,14 +114,31 @@
 </script>
 
 <div>
-  <Collapse on:open={load} bind:open={isOpen}>
-    <div slot="header" class="flex flex-row">
-      <span class="text-sm">{title}</span>
-      {#if isOpen}
-        <Fa icon={faPen} class="ml-2" on:click={()=>console.log("clicked")}/>
-      {/if}
-    </div>
-    <div slot="body">
+  <div class="flex flex-row">
+    {#if editingTitle}
+      <div
+        role="textbox"
+        tabindex="0"
+        contenteditable="true"
+        on:blur={editTitle}
+        on:keypress={(e) => {
+          if (e.key === "Enter") {
+            editTitle();
+            e.preventDefault();
+          }
+        }}
+        bind:innerText={document.label}>
+      </div>
+    {:else}
+      <a href="#/" class="text-sm" on:click={load}>{title}</a>
+    {/if}
+    {#if isOpen}
+      <a href="#/" on:click={() => editingTitle=true}>
+        <Fa icon={faPen} class="ml-2" /></a>
+    {/if}
+  </div>
+  {#if isOpen}
+    <div transition:slide={{ duration: 200 }}>
       <div class="text-xs font-medium flex flex-row">
         <div>
           {$_("created")}: {DateTime.fromISO(
@@ -124,7 +148,11 @@
         <div class="ml-4 flex flex-row">
           <span class="inline"
             >{$_("doctype")}: {document.document_type.label}</span
-          ><span><Fa icon={faPen} class="ml-2" /></span>
+          ><span
+            ><Fa
+              icon={faPen}
+              class="ml-2"
+              on:clicked={() => console.log("clocked")} /></span>
         </div>
         <div class="ml-4">
           <input
@@ -205,5 +233,5 @@
         {/if}
       </div>
     </div>
-  </Collapse>
+  {/if}
 </div>
