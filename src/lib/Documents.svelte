@@ -27,7 +27,7 @@
         });
         break;
       case -4:
-        mayan.listDocumentsWithTagId(cabinet.parent_id).then((result) => {
+        mayan.listDocumentsWithTagId(cabinet.parent_id!).then((result) => {
           docs = result;
         });
         break;
@@ -60,7 +60,8 @@
         <button class="ml-3 text-xl" on:click={deleteCabinet}>⊖</button>
       {/if}
     </div>
-    <ul>
+
+    <ul class="overflow-y-auto h-[80vh]">
       {#if docs == null}
         <li>
           <div class="flex justify-center">
