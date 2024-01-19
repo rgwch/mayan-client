@@ -7,7 +7,7 @@
   import { cabinets, tags, favourites } from "./model/store";
   import type { Document, Tag, DocumentType, Cabinet } from "./model/types";
   import Fa from "svelte-fa";
-  import { faPen, faStar } from "@fortawesome/free-solid-svg-icons";
+  import { faPencil, faStar } from "@fortawesome/free-solid-svg-icons";
   import Badge from "./widgets/Badge.svelte";
   import Dropdown from "./widgets/Dropdown.svelte";
   import Card from "./widgets/Card.svelte";
@@ -134,7 +134,7 @@
     {/if}
     {#if isOpen}
       <a href="#/" on:click={() => editingTitle=true}>
-        <Fa icon={faPen} class="ml-2" /></a>
+        <Fa icon={faPencil} class="ml-2" /></a>
     {/if}
   </div>
   {#if isOpen}
@@ -150,7 +150,7 @@
             >{$_("doctype")}: {document.document_type.label}</span
           ><span
             ><Fa
-              icon={faPen}
+              icon={faPencil}
               class="ml-2"
               on:clicked={() => console.log("clocked")} /></span>
         </div>
