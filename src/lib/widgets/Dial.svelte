@@ -1,10 +1,19 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    export let current: number;
     const dispatch = createEventDispatcher();
+    function change(nr: number) {
+        current += nr;
+        dispatch("change", current);
+    }
 </script>
 
-<div class="flex flex-row">
-    <button>&lt;</button>
-    <input type="number" />
-    <button>&gt;</button>
+<div class="flex flex-row items-end relative bottom-1">
+    <button
+        class="border border-blue-800 bottom-2 px-1 mx-2 hover:bg-blue-200 h-5 text-sm"
+        on:click={() => change(-1)}>&lt;</button>
+    <div class="mt-1">{current}</div> 
+    <button
+        class="border border-blue-800 px-1 mx-2 hover:bg-blue-200 h-5 text-sm"
+        on:click={() => change(1)}>&gt;</button>
 </div>

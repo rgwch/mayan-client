@@ -4,6 +4,7 @@
   import { _ } from 'svelte-i18n';
   import { mayan } from './model/mayan';
   import type { Document, Cabinet } from './model/types';
+  import Dial from './widgets/Dial.svelte';
   import { cabinets } from './model/store';
   export let cabinet: Cabinet | null;
   let docs: Array<Document> | null = null;
@@ -59,6 +60,7 @@
       {#if docs && docs.length == 0}
         <button class="ml-3 text-xl" on:click={deleteCabinet}>⊖</button>
       {/if}
+      <Dial current={0}></Dial>
     </div>
 
     <ul class="overflow-y-auto h-[80vh]">
