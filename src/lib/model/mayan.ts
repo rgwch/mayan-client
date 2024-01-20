@@ -228,7 +228,7 @@ export class Mayan {
    */
   public async createCabinet(name: string, parent: number | null = null): Promise<Cabinet> {
     if (parent) {
-      const parents: Array<Cabinet> = await this.listCabinets({ page: 0, pagesize: 1000 })
+      const parents: Array<Cabinet> = await this.listCabinets({ pagesize: 1000 })
       const parentObj = parents.find(cab => cab.id == parent)
       parent = parentObj?.id ?? null
     }
