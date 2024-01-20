@@ -28,6 +28,11 @@
   <input
     type="text"
     placeholder={$_('name')}
+    on:keypress={(e) => {
+      if (e.key === 'Enter') {
+        createCabinet();
+      }
+    }}
     bind:value={name}
     class="border-2 border-gray-200 rounded-md p-2" />
   <button class="large" on:click={createCabinet}> {$_('create')}</button>

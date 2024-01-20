@@ -144,10 +144,13 @@ export class Mayan {
    * @param limit maximum result site (0: no limit, fetch all)
    * @returns
    */
-  public async request(suburl: string, segment: querySegment = { page: 1, pagesize: defaultPageSize }): Promise<Array<any>> {
+  public async request(suburl: string, segment: querySegment = { page: 1, pagesize: defaultPageSize }, params?: string): Promise<Array<any>> {
     const pagenum = segment.page ?? 1
     const pagesize = segment.pagesize ?? defaultPageSize
     let page = this.url + suburl + `?page=${pagenum}&page_size=${pagesize}`;
+    if (params) {
+      page += "&" + params
+    }
     try {
       const result = await axios({
         method: "GET",
@@ -495,7 +498,7 @@ export class Mayan {
    * @returns the list of matching documents
    */
   public async filterByContent(query: string): Promise<Array<Document>> {
-    return this.request("search/documents.documentsearchresult?q=" + query);
+    return this.request("search/documents.documentsearchresult",{},"q="+query);
   }
 
 }

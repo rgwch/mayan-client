@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
+    import { slide } from 'svelte/transition';
     import { _ } from 'svelte-i18n';
     const dispatch = createEventDispatcher();
     export let title: string;
@@ -12,7 +13,7 @@
     let open = false;
 </script>
 
-<div class="relative inline-block text-left">
+<div class="relative inline-block text-left w-full">
     {#if small}
         <div>
             <button
@@ -71,7 +72,8 @@
         To: "transform opacity-0 scale-95"
     -->
     {#if open}
-        <div 
+        <div
+            transition:slide={{ duration: 200 }}
             class="absolute z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-y-auto max-h-60"
             class:left-0={left}
             class:right-0={!left}
