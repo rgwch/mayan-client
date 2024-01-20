@@ -16,8 +16,8 @@
   let hasNext = false;
   let hasPrev = false;
 
-  $: if (cabinet?.id !== currentCabinet) {
-    currentCabinet = cabinet?.id;
+  $: if (cabinet !=null) {
+    // currentCabinet = cabinet?.id;
     currentPage = 1;
     reload().then((d) => {
       docs = d;

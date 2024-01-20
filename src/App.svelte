@@ -31,6 +31,8 @@
   }
   let selected: any = null;
   function selection(event: any) {
+    selected=null;
+    console.log('selected', event.detail);
     selected = event.detail;
   }
 </script>
