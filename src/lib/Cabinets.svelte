@@ -1,6 +1,7 @@
 <!-- Left column on PC displays, top row on mobile devices -->
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte";
+  import { slide } from "svelte/transition";
   import { _ } from "svelte-i18n";
   import { mayan } from "./model/mayan";
   import { cabinets, documentTypes, tags } from "./model/store";
@@ -33,7 +34,9 @@
     >⊕</button>
 </div>
 {#if createPanel}
-  <CreateCabinet on:created={addedCabinet}></CreateCabinet>
+  <div transition:slide={{ duration: 200 }}>
+    <CreateCabinet on:created={addedCabinet}></CreateCabinet>
+  </div>
 {/if}
 <!-- List of all cabinets -->
 <ul>

@@ -1,14 +1,16 @@
 <!-- Display a single document -->
 <script lang="ts">
-  import { mayan } from './model/mayan';
-  import { DateTime } from 'luxon';
-  import { _ } from 'svelte-i18n';
-  import { cabinets, tags, favourites } from './model/store';
-  import type { Document, Tag, DocumentType, Cabinet } from './model/types';
-  import Collapse from './widgets/Collapse.svelte';
-  import Badge from './widgets/Badge.svelte';
-  import Dropdown from './widgets/Dropdown.svelte';
-  import Card from './widgets/Card.svelte';
+  import { mayan } from "./model/mayan";
+  import { DateTime } from "luxon";
+  import { _ } from "svelte-i18n";
+  import { slide } from "svelte/transition";
+  import { cabinets, tags, favourites } from "./model/store";
+  import type { Document, Tag, DocumentType, Cabinet } from "./model/types";
+  import Fa from "svelte-fa";
+  import { faPencil, faStar } from "@fortawesome/free-solid-svg-icons";
+  import Badge from "./widgets/Badge.svelte";
+  import Dropdown from "./widgets/Dropdown.svelte";
+  import Card from "./widgets/Card.svelte";
   export let document: Document;
   let imageURL: any;
   let isOpen: boolean = false;
@@ -17,9 +19,11 @@
   let currentImage: number = 0;
   let assignedCabinets: Array<Cabinet> = [];
   let isFavorite: boolean = false;
-  let title: string = $_('wait');
+  let title: string = $_("wait");
+  let editingTitle: boolean = false;
   makeTitle();
   async function load() {
+    isOpen = !isOpen;
     if (isOpen) {
       if (document.version_active?.page_list_url) {
         imageList = await mayan.getImageURLs(document);
@@ -47,14 +51,14 @@
     }
   }
   async function saveDesc(event: any) {
-    console.log('save ' + document.description);
+    console.log("save " + document.description);
     await mayan.updateDocument(document, { description: document.description });
   }
   async function downloadFile() {
     const blob = await mayan.loadBlob(document.file_latest.download_url);
     if (blob) {
       const url = URL.createObjectURL(blob);
-      const a = window.document.createElement('a');
+      const a = window.document.createElement("a");
       a.href = url;
       a.download = document.label;
       window.document.body.appendChild(a);
@@ -79,16 +83,21 @@
     await mayan.removeDocumentFromCabinet(document.id, cab);
     assignedCabinets = await mayan.listCabinetsOfDocument(document);
   }
+  async function editTitle() {
+    await mayan.updateDocument(document, { label: document.label });
+    await makeTitle();
+    editingTitle = false;
+  }
   async function makeTitle(): Promise<string> {
     const favs = $favourites.map((f) => f.document);
     title =
       document.label +
-      ' (' +
-      DateTime.fromISO(document.datetime_created).toFormat($_('dateformat')) +
-      ')';
+      " (" +
+      DateTime.fromISO(document.datetime_created).toFormat($_("dateformat")) +
+      ")";
     if (favs.find((f) => f.id === document.id)) {
       isFavorite = true;
-      title = '★ ' + title;
+      title = "★ " + title;
     }
     return title;
   }
@@ -105,23 +114,52 @@
 </script>
 
 <div>
-  <Collapse {title} on:open={load} bind:open={isOpen}>
-    <div slot="body">
+  <div class="flex flex-row">
+    {#if editingTitle}
+      <div
+        role="textbox"
+        tabindex="0"
+        contenteditable="true"
+        on:blur={editTitle}
+        on:keypress={(e) => {
+          if (e.key === "Enter") {
+            editTitle();
+            e.preventDefault();
+          }
+        }}
+        bind:innerText={document.label}>
+      </div>
+    {:else}
+      <a href="#/" class="text-sm" on:click={load}>{title}</a>
+    {/if}
+    {#if isOpen}
+      <a href="#/" on:click={() => editingTitle=true}>
+        <Fa icon={faPencil} class="ml-2" /></a>
+    {/if}
+  </div>
+  {#if isOpen}
+    <div transition:slide={{ duration: 200 }}>
       <div class="text-xs font-medium flex flex-row">
         <div>
-          {$_('created')}: {DateTime.fromISO(
+          {$_("created")}: {DateTime.fromISO(
             document.datetime_created,
-          ).toFormat($_('dateformat'))}
+          ).toFormat($_("dateformat"))}
         </div>
-        <div class="ml-4">
-          {$_('doctype')}: {document.document_type.label}
+        <div class="ml-4 flex flex-row">
+          <span class="inline"
+            >{$_("doctype")}: {document.document_type.label}</span
+          ><span
+            ><Fa
+              icon={faPencil}
+              class="ml-2"
+              on:clicked={() => console.log("clocked")} /></span>
         </div>
         <div class="ml-4">
           <input
             type="checkbox"
             bind:checked={isFavorite}
             on:click={makeFavorite} />
-          {$_('favorite')}
+          {$_("favorite")}
         </div>
       </div>
       <!-- Show associated cabinets and allow adding and removing -->
@@ -129,14 +167,16 @@
         {#each assignedCabinets as cab}
           <Badge
             text={cab.full_path}
-            textcolor={'#000000'}
-            backgroundcolor={'#eeeeee'}
+            textcolor={"#000000"}
+            backgroundcolor={"#eeeeee"}
             on:remove={() => removeCabinet(cab)}></Badge>
         {/each}
         <div class="flex-grow"></div>
         <Dropdown
-          title={$_('add_cabinet')}
-          elements={$cabinets.sort((a, b) => a.full_path.localeCompare(b.full_path))}
+          title={$_("add_cabinet")}
+          elements={$cabinets.sort((a, b) =>
+            a.full_path.localeCompare(b.full_path),
+          )}
           small={true}
           label={(c) => c.full_path}
           left={false}
@@ -148,12 +188,12 @@
           <Badge
             text={tag.label}
             textcolor={tag.color}
-            backgroundcolor={'#1a1a1a1a'}
+            backgroundcolor={"#1a1a1a1a"}
             on:remove={() => removeTag(tag)}></Badge>
         {/each}
         <div class="flex-grow"></div>
         <Dropdown
-          title={$_('add_tag')}
+          title={$_("add_tag")}
           elements={$tags}
           small={true}
           label={(t) => t.label}
@@ -162,11 +202,11 @@
         </Dropdown>
       </div>
       <!-- Show descrition and allow editing. Save on focus lost -->
-      <Card heading={$_('description')}>
+      <Card heading={$_("description")}>
         <textarea
           class="w-full"
           on:focusout={saveDesc}
-          placeholder={$_('no_description')}
+          placeholder={$_("no_description")}
           bind:value={document.description} />
       </Card>
       <!-- Show preview images and allow navigation and download -->
@@ -177,7 +217,7 @@
               <button
                 class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
                 on:click={prevImage}>&lt;</button>
-              {$_('page')}
+              {$_("page")}
               {currentImage + 1} / {imageList.length}
               <button
                 class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
@@ -185,13 +225,13 @@
             {/if}
             <button
               class="border border-blue-800 p-1 mx-2 hover:bg-blue-200"
-              on:click={downloadFile}>{$_('download')}</button>
+              on:click={downloadFile}>{$_("download")}</button>
             <img src={imageURL} alt={document.label} width="400" />
           </div>
         {:else}
-          <p>{$_('no_image')}</p>
+          <p>{$_("no_image")}</p>
         {/if}
       </div>
     </div>
-  </Collapse>
+  {/if}
 </div>

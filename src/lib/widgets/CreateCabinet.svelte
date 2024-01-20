@@ -23,7 +23,7 @@
   <Dropdown
     title={$_('parent')}
     elements={$cabinets}
-    label={(c) => c.label}
+    label={(c) => c.full_path}
     bind:selected={selectedParent}></Dropdown>
   <input
     type="text"

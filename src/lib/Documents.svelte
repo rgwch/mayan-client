@@ -1,46 +1,71 @@
 <!-- Right panel on PC displays, bottom portion on mobile devices: List of documents according to current selection-->
 <script lang="ts">
-  import DocumentDisplay from './Document.svelte';
-  import { _ } from 'svelte-i18n';
-  import { mayan } from './model/mayan';
-  import type { Document, Cabinet } from './model/types';
-  import { cabinets } from './model/store';
+  import DocumentDisplay from "./Document.svelte";
+  import { _ } from "svelte-i18n";
+  import { mayan } from "./model/mayan";
+  import type { Document, Cabinet } from "./model/types";
+  import Dial from "./widgets/Dial.svelte";
+  import { cabinets } from "./model/store";
   export let cabinet: Cabinet | null;
+  let currentCabinet = cabinet?.id;
+  const pagesize = 25;
+  let currentPage: number = 1;
   let docs: Array<Document> | null = null;
+  let hasNext = false;
+  let hasPrev = false;
 
-  $: if (cabinet != null) {
+  $: if (cabinet?.id !== currentCabinet) {
+    currentCabinet = cabinet?.id;
+    currentPage=1
+    reload().then((d) => {
+      docs = d;
+    });
+  }
+  async function reload(): Promise<Array<Document>> {
+    let d = [];
     docs = null;
-    switch (cabinet.id) {
+    // console.log("reloading page " + currentPage);
+    switch (cabinet!.id) {
       case -1:
-        mayan.listRecentlyAddedDocuments().then((result) => {
-          docs = result;
+        d = await mayan.listRecentlyAddedDocuments({
+          page: currentPage,
+          pagesize,
         });
         break;
       case -2:
-        mayan.listRecentlyAccessedDocuments().then((result) => {
-          docs = result;
+        d = await mayan.listRecentlyAccessedDocuments({
+          page: currentPage,
+          pagesize,
         });
         break;
       case -3:
-        mayan.listFavouriteDocuments().then((result) => {
-          docs = result.map((d) => d.document);
+        const result = await mayan.listFavouriteDocuments({
+          page: currentPage,
+          pagesize,
         });
+        d = result.map((d) => d.document);
         break;
       case -4:
-        mayan.listDocumentsWithTagId(cabinet.parent_id!).then((result) => {
-          docs = result;
-        });
+        d = await mayan.listDocumentsWithTagId(cabinet!.parent_id!);
         break;
       case -5:
-        mayan.filterByContent(cabinet.full_path).then((result) => {
-          docs = result;
-        });
+        d = await mayan.filterByContent(cabinet!.full_path);
         break;
       default:
-        mayan.listDocumentsFromCabinet(cabinet).then((result) => {
-          docs = result;
+        d = await mayan.listDocumentsFromCabinet(cabinet!, {
+          page: currentPage,
+          pagesize,
         });
     }
+    if (d) {
+      hasPrev = currentPage > 1;
+      hasNext = d.length == pagesize;
+    }else{
+      currentPage=1
+      hasPrev=false
+      return await reload()
+    }
+    return d;
   }
   function deleteCabinet() {
     if (cabinet) {
@@ -58,6 +83,14 @@
       <h1 class="text-xl font-bold">{cabinet.full_path}</h1>
       {#if docs && docs.length == 0}
         <button class="ml-3 text-xl" on:click={deleteCabinet}>⊖</button>
+      {:else}
+        <Dial
+          bind:current={currentPage}
+          {hasNext}
+          {hasPrev}
+          on:change={async () => {
+            docs = await reload();
+          }}></Dial>
       {/if}
     </div>
 
@@ -73,7 +106,7 @@
         </li>
       {:else if docs.length == 0}
         <li>
-          <p class="mx-auto mt-5">{$_('no_documents')}</p>
+          <p class="mx-auto mt-5">{$_("no_documents")}</p>
         </li>
       {:else}
         {#each docs as doc}
@@ -87,7 +120,7 @@
     </ul>
   {:else}
     <p class="mx-auto mt-5">
-      {$_('select_cabinet')}
+      {$_("select_cabinet")}
     </p>
   {/if}
 </div>

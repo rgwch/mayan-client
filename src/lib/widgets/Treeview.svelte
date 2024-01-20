@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
-    import { Tree } from '../model/tree';
-    import { cabinets } from '../model/store';
+    import { createEventDispatcher } from "svelte";
+    import { Tree } from "../model/tree";
+    import { cabinets } from "../model/store";
+    import { slide } from "svelte/transition";
     const dispatch = createEventDispatcher();
     export let tree: Tree<any>;
 
     async function expand() {
-        dispatch('selected', tree.payload);
+        dispatch("selected", tree.payload);
         if (tree.props.expanded) {
             tree.removeChildren();
             tree.props.expanded = false;
@@ -22,18 +23,20 @@
 
 <div>
     {#if tree.props.expanded}
-        <a href="#/" on:click={expand}>- {tree.payload.label} </a>
-        <ul>
-            {#each tree.getChildren() as child}
-                <li class="ml-3">
-                    <svelte:self tree={child} on:selected></svelte:self>
-                </li>
-            {/each}
-        </ul>
+        <div transition:slide={{ duration: 200 }}>
+            <a href="#/" on:click={expand}>- {tree.payload.label} </a>
+            <ul>
+                {#each tree.getChildren() as child}
+                    <li class="ml-3">
+                        <svelte:self tree={child} on:selected></svelte:self>
+                    </li>
+                {/each}
+            </ul>
+        </div>
     {:else if hasChildren()}
         <a href="#/" on:click={expand}>+ {tree.payload.label} </a>
     {:else}
-        <a href="#/" on:click={() => dispatch('selected', tree.payload)}
+        <a href="#/" on:click={() => dispatch("selected", tree.payload)}
             >{tree.payload.label}</a>
     {/if}
 </div>
