@@ -8,7 +8,7 @@
   import { cabinets } from "./model/store";
   export let cabinet: Cabinet | null;
   let currentCabinet = cabinet?.id;
-  const pagesize = 10;
+  const pagesize = 25;
   let currentPage: number = 1;
   let docs: Array<Document> | null = null;
   let hasNext = false;
@@ -56,7 +56,7 @@
           pagesize,
         });
     }
-    if (d && d.length) {
+    if (d) {
       hasPrev = currentPage > 1;
       hasNext = d.length == pagesize;
     }else{

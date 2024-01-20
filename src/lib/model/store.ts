@@ -15,8 +15,8 @@ export const favourites = writable<Favorite[]>([]);
  * Initialize the store with data from the server. Data is ready when the promise resolves.
  */
 export const init = async () => {
-    cabinets.set(await mayan.listCabinets())
-    tags.set(await mayan.listTags());
+    cabinets.set(await mayan.listCabinets({ pagesize: 1000 }))
+    tags.set(await mayan.listTags({ pagesize: 1000 }));
     documentTypes.set(await mayan.listDocumentTypes());
     favourites.set(await mayan.listFavouriteDocuments())
 }

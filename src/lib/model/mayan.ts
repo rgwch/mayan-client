@@ -6,6 +6,7 @@ import type { Cabinet, Document, Tag, DocumentType, Favorite } from "./types";
 
 import axios from 'axios'
 const API = "/api/v4/"
+const defaultPageSize = 25
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.headers.common['Accept'] = 'application/json'
 
@@ -79,7 +80,7 @@ export class Mayan {
       try {
         axios.defaults.headers.common['Authorization'] = `Token ${this.token}`
         const test = await this.request("cabinets/", { page: 1, pagesize: 1 });
-        if(test){
+        if (test) {
           return true;
         }
       } catch (err) {
@@ -143,9 +144,9 @@ export class Mayan {
    * @param limit maximum result site (0: no limit, fetch all)
    * @returns
    */
-  public async request(suburl: string, segment: querySegment = { page: 1, pagesize: 10 }): Promise<Array<any>> {
+  public async request(suburl: string, segment: querySegment = { page: 1, pagesize: defaultPageSize }): Promise<Array<any>> {
     const pagenum = segment.page ?? 1
-    const pagesize = segment.pagesize ?? 10
+    const pagesize = segment.pagesize ?? defaultPageSize
     let page = this.url + suburl + `?page=${pagenum}&page_size=${pagesize}`;
     try {
       const result = await axios({
@@ -215,8 +216,8 @@ export class Mayan {
    * List all cabinets
    * @returns
    */
-  public async listCabinets(segm?:querySegment): Promise<Array<Cabinet>> {
-    return this.request("cabinets/",segm);
+  public async listCabinets(segm?: querySegment): Promise<Array<Cabinet>> {
+    return this.request("cabinets/", segm);
   }
 
   /**
@@ -227,7 +228,7 @@ export class Mayan {
    */
   public async createCabinet(name: string, parent: number | null = null): Promise<Cabinet> {
     if (parent) {
-      const parents: Array<Cabinet> = await this.listCabinets({page:0,pagesize:1000})
+      const parents: Array<Cabinet> = await this.listCabinets({ page: 0, pagesize: 1000 })
       const parentObj = parents.find(cab => cab.id == parent)
       parent = parentObj?.id ?? null
     }
