@@ -1,11 +1,13 @@
 <!-- Right panel on PC displays, bottom portion on mobile devices: List of documents according to current selection-->
 <script lang="ts">
-  import DocumentDisplay from "./Document.svelte";
-  import { _ } from "svelte-i18n";
-  import { mayan } from "./model/mayan";
-  import type { Document, Cabinet } from "./model/types";
-  import Dial from "./widgets/Dial.svelte";
-  import { cabinets } from "./model/store";
+  import DocumentDisplay from './Document.svelte';
+  import { _ } from 'svelte-i18n';
+  import { mayan } from './model/mayan';
+  import type { Document, Cabinet } from './model/types';
+  import Fa from 'svelte-fa';
+  import { faTrash, faFolderMinus } from '@fortawesome/free-solid-svg-icons';
+  import Dial from './widgets/Dial.svelte';
+  import { cabinets } from './model/store';
   export let cabinet: Cabinet | null;
   let currentCabinet = cabinet?.id;
   const pagesize = 25;
@@ -16,7 +18,7 @@
 
   $: if (cabinet?.id !== currentCabinet) {
     currentCabinet = cabinet?.id;
-    currentPage=1
+    currentPage = 1;
     reload().then((d) => {
       docs = d;
     });
@@ -60,10 +62,10 @@
     if (d) {
       hasPrev = currentPage > 1;
       hasNext = d.length == pagesize;
-    }else{
-      currentPage=1
-      hasPrev=false
-      return await reload()
+    } else {
+      currentPage = 1;
+      hasPrev = false;
+      return await reload();
     }
     return d;
   }
@@ -81,8 +83,9 @@
   {#if cabinet}
     <div class="flex flex-row">
       <h1 class="text-xl font-bold">{cabinet.full_path}</h1>
-      {#if docs && docs.length == 0}
-        <button class="ml-3 text-xl" on:click={deleteCabinet}>⊖</button>
+      {#if docs && docs.length == 0 && cabinet.children?.length == 0}
+        <button class="ml-3 text-xl" on:click={deleteCabinet}
+          ><Fa icon={faFolderMinus} size="sm" color="gray"></Fa></button>
       {:else}
         <Dial
           bind:current={currentPage}
@@ -106,7 +109,7 @@
         </li>
       {:else if docs.length == 0}
         <li>
-          <p class="mx-auto mt-5">{$_("no_documents")}</p>
+          <p class="mx-auto mt-5">{$_('no_documents')}</p>
         </li>
       {:else}
         {#each docs as doc}
@@ -120,7 +123,7 @@
     </ul>
   {:else}
     <p class="mx-auto mt-5">
-      {$_("select_cabinet")}
+      {$_('select_cabinet')}
     </p>
   {/if}
 </div>
