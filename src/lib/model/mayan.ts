@@ -9,6 +9,11 @@ const API = "/api/v4/"
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 axios.defaults.headers.common['Accept'] = 'application/json'
 
+export type querySegment = {
+  page?: number,
+  pagesize?: number
+}
+
 export class Mayan {
   private url: string = "";
   private token: string = "";
@@ -29,8 +34,8 @@ export class Mayan {
     if (!url) throw new Error("URL is required")
     if (!username) throw new Error("Username is required")
     if (!password) throw new Error("Password is required")
-    if(url.endsWith(API)) url = url.slice(0, -API.length)
-    if(!url.startsWith("http")) url = "https://" + url
+    if (url.endsWith(API)) url = url.slice(0, -API.length)
+    if (!url.startsWith("http")) url = "https://" + url
     if (url.endsWith("/")) url = url.slice(0, -1);
     this.url = url + API;
     const body = {
@@ -73,8 +78,10 @@ export class Mayan {
     if (this.token.length > 0 && this.url.length > 0) {
       try {
         axios.defaults.headers.common['Authorization'] = `Token ${this.token}`
-        const test = await this.request("cabinets/", 1);
-        return true;
+        const test = await this.request("cabinets/", { page: 1, pagesize: 1 });
+        if(test){
+          return true;
+        }
       } catch (err) {
         axios.defaults.headers.common['Authorization'] = undefined
         return false;
@@ -92,7 +99,7 @@ export class Mayan {
   public normalizeURL(url: string): string {
     if (!url || url.startsWith(this.url)) return url;
     const internal = url.substring(
-      url.indexOf(API) + API.length 
+      url.indexOf(API) + API.length
     );
     return this.url + internal;
   }
@@ -104,7 +111,7 @@ export class Mayan {
   public stripURL(url: string): string {
     if (!url) return url;
     const internal = url.substring(
-      url.indexOf(API) + API.length 
+      url.indexOf(API) + API.length
     );
     return internal;
   }
@@ -136,29 +143,25 @@ export class Mayan {
    * @param limit maximum result site (0: no limit, fetch all)
    * @returns
    */
-  public async request(suburl: string, limit = 0): Promise<Array<any>> {
-    let ret: Array<any> = [];
-    let pagesize = Math.min(limit, 50);
-    let page = this.url + suburl + (pagesize ? "?page_size=" + pagesize : "");
-    do {
-      try {
-        const result = await axios({
-          method: "GET",
-          url: page
-        })
-        const json = result.data;
-        if (json.results && Array.isArray(json.results)) {
-          ret = ret.concat(json.results);
-          page = this.normalizeURL(json.next);
-        } else {
-          return [json]
-        }
-      } catch (e) {
-        console.log(e);
-        return ret;
+  public async request(suburl: string, segment: querySegment = { page: 1, pagesize: 10 }): Promise<Array<any>> {
+    const pagenum = segment.page ?? 1
+    const pagesize = segment.pagesize ?? 10
+    let page = this.url + suburl + `?page=${pagenum}&page_size=${pagesize}`;
+    try {
+      const result = await axios({
+        method: "GET",
+        url: page
+      })
+      const json = result.data;
+      if (json.results && Array.isArray(json.results)) {
+        return (json.results);
+      } else {
+        return [json]
       }
-    } while (page && (!limit || ret.length < limit));
-    return ret;
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
   }
 
   /**
@@ -212,8 +215,8 @@ export class Mayan {
    * List all cabinets
    * @returns
    */
-  public async listCabinets(): Promise<Array<Cabinet>> {
-    return this.request("cabinets/");
+  public async listCabinets(segm?:querySegment): Promise<Array<Cabinet>> {
+    return this.request("cabinets/",segm);
   }
 
   /**
@@ -224,7 +227,7 @@ export class Mayan {
    */
   public async createCabinet(name: string, parent: number | null = null): Promise<Cabinet> {
     if (parent) {
-      const parents: Array<Cabinet> = await this.listCabinets()
+      const parents: Array<Cabinet> = await this.listCabinets({page:0,pagesize:1000})
       const parentObj = parents.find(cab => cab.id == parent)
       parent = parentObj?.id ?? null
     }
@@ -286,8 +289,8 @@ export class Mayan {
    * List all documents. This is probably a very expensive operation.
    * @returns
    */
-  public async listDocuments(): Promise<Array<Document>> {
-    return this.request("documents/");
+  public async listDocuments(segm?: querySegment): Promise<Array<Document>> {
+    return this.request("documents/", segm);
   }
   /**
    * List all documents in a cabinet
@@ -296,32 +299,32 @@ export class Mayan {
    */
   public async listDocumentsFromCabinet(
     cabinet: Cabinet,
-    limit = 0
+    segm?: querySegment
   ): Promise<Array<Document>> {
-    return this.request("cabinets/" + cabinet.id + "/documents", limit);
+    return this.request("cabinets/" + cabinet.id + "/documents", segm);
   }
   /**
    * Retrieve recently added documents
    * @returns
    */
-  public async listRecentlyAddedDocuments(limit = 0): Promise<Array<Document>> {
-    return this.request("documents/created/", limit);
+  public async listRecentlyAddedDocuments(segm?: querySegment): Promise<Array<Document>> {
+    return this.request("documents/created/", segm);
   }
   /**
    * retrieve recently accessed documents
    * @param limit 
    * @returns 
    */
-  public async listRecentlyAccessedDocuments(limit = 0): Promise<Array<Document>> {
-    const result = await this.request("documents/accessed/", limit);
+  public async listRecentlyAccessedDocuments(segm?: querySegment): Promise<Array<Document>> {
+    const result = await this.request("documents/accessed/", segm);
     return result.map(obj => obj.document)
   }
   /**
    * List all favourite documents of the current user
    * @returns
    */
-  public async listFavouriteDocuments(limit = 0): Promise<Array<Favorite>> {
-    return await this.request("documents/favorites/", limit);
+  public async listFavouriteDocuments(segm?: querySegment): Promise<Array<Favorite>> {
+    return await this.request("documents/favorites/", segm);
   }
 
   /**
@@ -359,8 +362,8 @@ export class Mayan {
    * (Current user need permission to view document types)
    * @returns
    */
-  public async listDocumentTypes(): Promise<Array<DocumentType>> {
-    return this.request("document_types/");
+  public async listDocumentTypes(segm?: querySegment): Promise<Array<DocumentType>> {
+    return this.request("document_types/", segm);
   }
 
   /**
@@ -368,8 +371,8 @@ export class Mayan {
    * (Current user need permission to view tags)
    * @returns 
    */
-  public async listTags(): Promise<Array<Tag>> {
-    return this.request("tags/");
+  public async listTags(segm?: querySegment): Promise<Array<Tag>> {
+    return this.request("tags/", segm);
   }
 
   /**
