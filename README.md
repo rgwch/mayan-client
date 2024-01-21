@@ -56,6 +56,11 @@ Please note that above operations are only possible, if the logged-in user has t
 Nito comes with german, english and french language files, being german the fallback. The language to use is taken from the browser's locale. You can also change the language by calling locale.set() in src/lib/i18n/i18n.ts.
 Adding new languanges is easy: Just create a file (e.g. it.json) with all the keys from de.json and translate the values. Then, add `register('it', () => import('./it.json'))` to src/lib/i18n/i18n.ts.
 
+## Privacy
+
+Nito does not store anything on any server. It only stores access credentials in the LocalStorage of the Browser, if the user selects "stay logged in".
+Clearing the Browser's cache will remove everything. It is possible, however, that the Mayan server, you connect to, stores your requests. That is the same as if you would connect to the server via the Mayan UI.
+
 ## Credits
 
 * Of course, this app would be useless without [Mayan EDMS](https://www.mayan-edms.com/)
