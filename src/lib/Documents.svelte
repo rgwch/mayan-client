@@ -1,23 +1,21 @@
 <!-- Right panel on PC displays, bottom portion on mobile devices: List of documents according to current selection-->
 <script lang="ts">
-  import DocumentDisplay from './Document.svelte';
-  import { _ } from 'svelte-i18n';
-  import { mayan } from './model/mayan';
-  import type { Document, Cabinet } from './model/types';
-  import Fa from 'svelte-fa';
-  import { faTrash, faFolderMinus } from '@fortawesome/free-solid-svg-icons';
-  import Dial from './widgets/Dial.svelte';
-  import { cabinets } from './model/store';
+  import DocumentDisplay from "./Document.svelte";
+  import { _ } from "svelte-i18n";
+  import { mayan } from "./model/mayan";
+  import type { Document, Cabinet } from "./model/types";
+  import Fa from "svelte-fa";
+  import { faTrash, faFolderMinus } from "@fortawesome/free-solid-svg-icons";
+  import Dial from "./widgets/Dial.svelte";
+  import { cabinets } from "./model/store";
   export let cabinet: Cabinet | null;
-  let currentCabinet = cabinet?.id;
   const pagesize = 25;
   let currentPage: number = 1;
   let docs: Array<Document> | null = null;
   let hasNext = false;
   let hasPrev = false;
 
-  $: if (cabinet !=null) {
-    // currentCabinet = cabinet?.id;
+  $: if (cabinet != null) {
     currentPage = 1;
     reload().then((d) => {
       docs = d;
@@ -109,13 +107,13 @@
         </li>
       {:else if docs.length == 0}
         <li>
-          <p class="mx-auto mt-5">{$_('no_documents')}</p>
+          <p class="mx-auto mt-5">{$_("no_documents")}</p>
         </li>
       {:else}
         {#each docs as doc}
           <li>
             {#key doc.id}
-              <DocumentDisplay document={doc} />
+              <DocumentDisplay document={doc} on:deleted={reload} />
             {/key}
           </li>
         {/each}
@@ -123,7 +121,7 @@
     </ul>
   {:else}
     <p class="mx-auto mt-5">
-      {$_('select_cabinet')}
+      {$_("select_cabinet")}
     </p>
   {/if}
 </div>

@@ -141,8 +141,9 @@ export class Mayan {
    * generic GET request to Mayan (internally used by other methods)
    * The method will call the endpoint repeatedly until all results are fetched or the limit is reached
    * @param suburl REST Endpoint to call
-   * @param limit maximum result site (0: no limit, fetch all)
-   * @returns
+   * @param segment the page and pagesize to fetch
+   * @param params query parameters to pass to the endpoint
+   * @returns the result.data portion of the server's answer
    */
   public async request(suburl: string, segment: querySegment = { page: 1, pagesize: defaultPageSize }, params?: string): Promise<Array<any>> {
     const pagenum = segment.page ?? 1
@@ -169,7 +170,7 @@ export class Mayan {
   }
 
   /**
-   * Generic retrieve a single object from Mayan
+   * Generic retrieve a single object from Mayan (used e.g. to download files)
    * @param url the URL to retrieve
    * @returns
    */
@@ -185,7 +186,7 @@ export class Mayan {
     return blob
   }
   /**
-   * Generic retrieve an image from Mayan
+   * Generic retrieve an image from Mayan (used to download preview images)
    * @param url the URL to retrieve
    * @returns an ObjectURL for the image
    */
@@ -489,16 +490,32 @@ export class Mayan {
     } else {
       throw new Error("Could not create document")
     }
-
   }
 
+  /**
+   * Delete a document (i.e. move it to the trash)
+   * @param document 
+   * @returns true on success
+   */
+  public async deleteDocument(document: Document): Promise<boolean> {
+    try {
+      await axios({
+        method: "DELETE",
+        url: this.url + "documents/" + document.id + "/"
+      })
+      return true
+    } catch (err) {
+      console.log(err)
+      return false
+    }
+  }
   /**
    * retrieve documents matching a given query
    * @param query a search term
    * @returns the list of matching documents
    */
   public async filterByContent(query: string): Promise<Array<Document>> {
-    return this.request("search/documents.documentsearchresult",{},"q="+query);
+    return this.request("search/documents.documentsearchresult", {}, "q=" + query);
   }
 
 }

@@ -13,7 +13,7 @@
     let open = false;
 </script>
 
-<div class="relative inline-block text-left w-full">
+<div class="relative inline-block text-left">
     {#if small}
         <div>
             <button
