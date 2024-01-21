@@ -25,6 +25,7 @@
   "parent": "Parent",
   "password": "Password",
   "privacy": "If you select 'Stay logged in', login details will be saved on this browser. Otherwise, Nito does not store any data.",
+  "really_delete": "Do you really want to delete {file}?",
   "search": "search term",
   "select_cabinet": "Please select  cabinet",
   "stay_logged_in": "Stay logged in",
