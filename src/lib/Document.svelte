@@ -1,16 +1,18 @@
 <!-- Display a single document -->
 <script lang="ts">
   import { mayan } from "./model/mayan";
+  import { createEventDispatcher } from "svelte";
   import { DateTime } from "luxon";
   import { _ } from "svelte-i18n";
   import { slide } from "svelte/transition";
   import { cabinets, tags, favourites } from "./model/store";
   import type { Document, Tag, DocumentType, Cabinet } from "./model/types";
   import Fa from "svelte-fa";
-  import { faPencil, faStar } from "@fortawesome/free-solid-svg-icons";
+  import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
   import Badge from "./widgets/Badge.svelte";
   import Dropdown from "./widgets/Dropdown.svelte";
   import Card from "./widgets/Card.svelte";
+  const dispatch = createEventDispatcher();
   export let document: Document;
   let imageURL: any;
   let isOpen: boolean = false;
@@ -111,6 +113,13 @@
     favourites.set(await mayan.listFavouriteDocuments());
     await makeTitle();
   }
+  async function deleteDocument() {
+    if (confirm($_("really_delete",{values: {file: document.label}}))) {
+      const id = document.id;
+      await mayan.deleteDocument(document);
+      dispatch("deleted", id);
+    }
+  }
 </script>
 
 <div>
@@ -133,8 +142,10 @@
       <a href="#/" class="text-sm" on:click={load}>{title}</a>
     {/if}
     {#if isOpen}
-      <a href="#/" on:click={() => editingTitle=true}>
+      <a href="#/" on:click={() => (editingTitle = true)}>
         <Fa icon={faPencil} class="ml-2" /></a>
+      <a href="#/" on:click={deleteDocument}>
+        <Fa icon={faTrash} class="ml-2" /></a>
     {/if}
   </div>
   {#if isOpen}

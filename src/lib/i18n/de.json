@@ -25,6 +25,7 @@
   "parent": "Übergeordnet",
   "password": "Passwort",
   "privacy": "Wenn Sie 'Angemeldet bleiben' auswählen, werden Login-Daten auf diesem Browser gespeichert. Ansonsten speichert Nito keinerlei Daten.",
+  "really_delete": "Wollen Sie {file} wirklich löschen?",
   "search": "Suchbegriff",
   "select_cabinet": "Bitte Archiv auswählen",
   "stay_logged_in": "Angemeldet bleiben",
