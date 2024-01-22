@@ -447,6 +447,12 @@ export class Mayan {
     return this.post("documents/" + document.id + "/", body, "PUT");
   }
 
+  public async setDocumentType(document_id: number, type_id: number) {
+    const body={
+      document_type_id: type_id
+    }
+    return this.post("documents/" + document_id + "/type/change/", body);
+  }
   /**
    * Create a new document
    * @param type 
