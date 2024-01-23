@@ -6,8 +6,8 @@
   import { mayan } from "../model/mayan";
   import Dropdown from "./Dropdown.svelte";
   import Dropzone from "svelte-file-dropzone";
-  const accept = [".pdf","jpg"];
-  let selectedFile: File;
+  const accept = [".pdf", "jpg"];
+  let selectedFile: File | undefined;
   let selectedType: DocumentType;
   let selectedCabinet: Cabinet;
   let buttontext = $_("upload");
@@ -35,9 +35,14 @@
       inputlabel = selectedFile.name.split("\\").pop() || $_("file");
     }
   }
-  function handleDropped(event: CustomEvent<FileList>) {
-    selectedFile = event.detail[0];
-    inputlabel = selectedFile.name.split("\\").pop() || $_("file");
+  function handleDropped(event: any) {
+    const files = event.detail.acceptedFiles;
+    if (Array.isArray(files)) {
+      selectedFile = files[0];
+    } else {
+      selectedFile = undefined;
+    }
+    inputlabel = selectedFile?.name.split("\\").pop() || $_("file");
   }
   let inputlabel = $_("file");
 </script>
@@ -59,15 +64,17 @@
     bind:this={fileinput}
     type="file"
     id="files"
-    accept=".pdf"
     bind:value={selectedFile}
     on:change={changeName} />
-  <!-- label for="files">{inputlabel}</label -->
-  <Dropzone on:drop={handleDropped} inputElement={fileinput} multiple={false} accept>
+  <Dropzone on:drop={handleDropped} inputElement={fileinput} multiple={false}>
     <p>{inputlabel}</p>
   </Dropzone>
 
-  <button class="large" disabled={selectedFile!=null} on:click={uploadFile}>{buttontext}</button>
+  <button
+    class="large"
+    disabled={selectedFile == undefined}
+    on:click={uploadFile}
+    class:hidden={selectedFile == undefined}>{buttontext}</button>
 </div>
 
 <style>
@@ -78,23 +85,5 @@
     overflow: hidden;
     position: absolute;
     z-index: -1;
-  }
-  .inputfile + label {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    display: inline-block;
-    font-weight: 500;
-    padding: 0.3rem 1.2rem;
-    border: 1px solid lightblue;
-    border-radius: 0.5rem;
-    cursor: pointer;
-  }
-
-  .inputfile:focus + label {
-    outline: 2px dotted blue;
-    outline: -webkit-focus-ring-color auto 5px;
-  }
-  .inputfile:hover + label {
-    background-color: lightblue;
   }
 </style>
