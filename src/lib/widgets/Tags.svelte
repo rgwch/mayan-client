@@ -6,6 +6,7 @@
     import { tags } from "../model/store";
     import Fa from "svelte-fa";
     import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
+    import { faCheck } from "@fortawesome/free-solid-svg-icons";
     const dispatch = createEventDispatcher();
     let createTag = false;
     let color: string = "#000000";
@@ -20,11 +21,13 @@
                 class="w-32"
                 placeholder={$_("tag_name")}
                 bind:value={tagname} />
+
             <div class="mt-2">
                 <Colorpicker
                     bind:hex={color}
                     label={$_("color")}
                     isDialog={true} />
+                <button class="pt-2 ml-2"><Fa icon={faCheck}></Fa></button>
             </div>
         </div>
     {:else}
