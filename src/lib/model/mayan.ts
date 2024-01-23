@@ -424,6 +424,14 @@ export class Mayan {
   public async listDocumentsWithTagId(id: number): Promise<Array<Document>> {
     return this.request("tags/" + id + "/documents/");
   }
+
+  public async createTag(name: string, color: string): Promise<Tag> {
+    const body = {
+      label: name,
+      color: color
+    };
+    return this.post("tags/", body);
+  }
   /**
    * Modify a document
    * @param document 

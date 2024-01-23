@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount, createEventDispatcher } from "svelte";
     import Dropdown from "./Dropdown.svelte";
+    import { mayan } from "../model/mayan";
     import Colorpicker from "svelte-awesome-color-picker";
     import { _ } from "svelte-i18n";
     import { tags } from "../model/store";
@@ -8,13 +9,18 @@
     import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
     import { faCheck } from "@fortawesome/free-solid-svg-icons";
     const dispatch = createEventDispatcher();
-    let createTag = false;
-    let color: string = "#000000";
+    let openCreateTag = false;
+    let color: string = "#aa0000";
     let tagname: string = "";
+    async function addTag() {
+        await mayan.createTag(tagname, color);
+        tags.set(await mayan.listTags());
+        openCreateTag = false;
+    }
 </script>
 
 <div class="flex flex-row items-center">
-    {#if createTag}
+    {#if openCreateTag}
         <div class="flex-flex-col">
             <input
                 type="text"
@@ -22,12 +28,20 @@
                 placeholder={$_("tag_name")}
                 bind:value={tagname} />
 
-            <div class="mt-2">
+            <div class="mt-2 flex flex-row items-baseline">
                 <Colorpicker
                     bind:hex={color}
                     label={$_("color")}
                     isDialog={true} />
-                <button class="pt-2 ml-2"><Fa icon={faCheck}></Fa></button>
+                <button
+                    class="ml-6 mt-2 border border-blue-200 p-1 hover:bg-blue-200"
+                    on:click={addTag}
+                    ><Fa
+                        icon={faCheck}
+                        translateY={0.2}
+                        color="#5ff900"
+                        scale={1.2}></Fa
+                    ></button>
             </div>
         </div>
     {:else}
@@ -45,7 +59,7 @@
     <span class="ml-4 pl-2"
         ><button
             on:click={() => {
-                createTag = !createTag;
+                openCreateTag = !openCreateTag;
             }}><Fa icon={faSquarePlus} scale="1.2"></Fa></button>
     </span>
 </div>
