@@ -24,7 +24,7 @@
       </slot>
     </a>
     {#if open}
-      <div transition:slide={{ duration: 100 }}>
+      <div transition:slide={{ duration: 200 }}>
         <slot name="body" class="h-auto" />
       </div>
     {/if}

@@ -5,7 +5,7 @@
   import { DateTime } from "luxon";
   import { _ } from "svelte-i18n";
   import { slide } from "svelte/transition";
-  import { cabinets, tags, favourites } from "./model/store";
+  import { cabinets, tags, favourites, documentTypes } from "./model/store";
   import type { Document, Tag, DocumentType, Cabinet } from "./model/types";
   import Fa from "svelte-fa";
   import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +23,7 @@
   let isFavorite: boolean = false;
   let title: string = $_("wait");
   let editingTitle: boolean = false;
+  let editingDoctype: boolean = false;
   makeTitle();
   async function load() {
     isOpen = !isOpen;
@@ -114,11 +115,16 @@
     await makeTitle();
   }
   async function deleteDocument() {
-    if (confirm($_("really_delete",{values: {file: document.label}}))) {
+    if (confirm($_("really_delete", { values: { file: document.label } }))) {
       const id = document.id;
       await mayan.deleteDocument(document);
       dispatch("deleted", id);
     }
+  }
+  async function setDocumentType(dt: DocumentType) {
+    await mayan.setDocumentType(document.id, dt.id);
+    document.document_type = dt;
+    editingDoctype = false;
   }
 </script>
 
@@ -157,13 +163,25 @@
           ).toFormat($_("dateformat"))}
         </div>
         <div class="ml-4 flex flex-row">
-          <span class="inline"
-            >{$_("doctype")}: {document.document_type.label}</span
-          ><span
-            ><Fa
-              icon={faPencil}
-              class="ml-2"
-              on:clicked={() => console.log("clocked")} /></span>
+          {#if editingDoctype}
+            <Dropdown
+              title={document.document_type.label}
+              elements={$documentTypes}
+              small={false}
+              label={(dt) => dt.label}
+              left={false}
+              on:selected={(dt) => setDocumentType(dt.detail)} />
+          {:else}
+            <span>{$_("doctype")}: {document.document_type.label}</span>
+          {/if}
+
+          <a
+            href="#/"
+            on:click={() => {
+              editingDoctype = !editingDoctype;
+            }}>
+            <Fa icon={faPencil} class="ml-2" />
+          </a>
         </div>
         <div class="ml-4">
           <input
