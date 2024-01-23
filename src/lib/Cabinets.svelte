@@ -6,11 +6,13 @@
   import { mayan } from "./model/mayan";
   import Fa from "svelte-fa";
   import { faPlus, faFolderPlus } from "@fortawesome/free-solid-svg-icons";
+  import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
   import { cabinets, documentTypes, tags } from "./model/store";
   import type { Cabinet, DocumentType, Tag } from "./model/types";
   import Dropdown from "./widgets/Dropdown.svelte";
   import Collapse from "./widgets/Collapse.svelte";
   import Uploader from "./widgets/Uploader.svelte";
+  import Tags from "./widgets/Tags.svelte";
   import Search from "./widgets/Search.svelte";
   import CreateCabinet from "./widgets/CreateCabinet.svelte";
   import { Tree } from "./model/tree";
@@ -90,16 +92,7 @@
 </ul>
 <!-- having a tag -->
 <div class="mt-3 w-32">
-  <Dropdown
-    title={$_("tags")}
-    elements={$tags}
-    label={(t) => t.label}
-    on:selected={(t) =>
-      dispatch("selected", {
-        id: -4,
-        full_path: t.detail.label,
-        parent_id: t.detail.id,
-      })} />
+  <Tags on:selected></Tags>
 </div>
 
 <!-- Create/Upload documents -->
