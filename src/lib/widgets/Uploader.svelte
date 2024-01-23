@@ -1,17 +1,17 @@
 <!-- Select a file to upload to Mayan-->
 <script lang="ts">
-  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import type { DocumentType, Cabinet } from "../model/types";
   import { cabinets, documentTypes } from "../model/store";
   import { mayan } from "../model/mayan";
   import Dropdown from "./Dropdown.svelte";
   import Dropzone from "svelte-file-dropzone";
+  const accept = [".pdf","jpg"];
   let selectedFile: File;
   let selectedType: DocumentType;
   let selectedCabinet: Cabinet;
   let buttontext = $_("upload");
-
+  let fileinput: HTMLInputElement;
   async function uploadFile(): Promise<boolean> {
     buttontext = $_("wait");
     const result = await mayan.createDocument(
@@ -56,17 +56,18 @@
     bind:selected={selectedCabinet} />
   <input
     class="inputfile"
+    bind:this={fileinput}
     type="file"
     id="files"
     accept=".pdf"
     bind:value={selectedFile}
     on:change={changeName} />
-  <label for="files">{inputlabel}</label>
-  <Dropzone on:drop={handleDropped}>
+  <!-- label for="files">{inputlabel}</label -->
+  <Dropzone on:drop={handleDropped} inputElement={fileinput} multiple={false} accept>
     <p>{inputlabel}</p>
   </Dropzone>
 
-  <button class="large" on:click={uploadFile}>{buttontext}</button>
+  <button class="large" disabled={selectedFile!=null} on:click={uploadFile}>{buttontext}</button>
 </div>
 
 <style>
