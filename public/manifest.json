@@ -1,0 +1,19 @@
+{
+  "short_name": "Nito",
+  "name": "Nito Mayan Client",
+  "icons": [
+    {
+      "src": "/mayan192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/mayan512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#bfdbfe",
+  "display": "standalone"
+}
