@@ -6,7 +6,6 @@
   import { mayan } from "../model/mayan";
   import Dropdown from "./Dropdown.svelte";
   import Dropzone from "svelte-file-dropzone";
-  const accept = [".pdf", "jpg"];
   let selectedFile: File | undefined;
   let selectedType: DocumentType;
   let selectedCabinet: Cabinet;
@@ -18,7 +17,7 @@
       selectedType ?? $documentTypes[0],
       selectedCabinet?.id,
       "deu", // TODO generalize
-      selectedFile,
+      selectedFile!,
     );
     if (result) {
       inputlabel = $_("file");
