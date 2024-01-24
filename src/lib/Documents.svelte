@@ -77,6 +77,10 @@
       });
     }
   }
+  async function deleteDocument(event:any){
+    await mayan.deleteDocument(event.detail);
+    docs=await reload();
+  }
 </script>
 
 <div>
@@ -115,7 +119,7 @@
         {#each docs as doc}
           <li>
             {#key doc.id}
-              <DocumentDisplay document={doc} on:deleted={reload} />
+              <DocumentDisplay document={doc} on:deleted={deleteDocument} />
             {/key}
           </li>
         {/each}

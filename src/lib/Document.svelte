@@ -116,9 +116,7 @@
   }
   async function deleteDocument() {
     if (confirm($_("really_delete", { values: { file: document.label } }))) {
-      const id = document.id;
-      await mayan.deleteDocument(document);
-      dispatch("deleted", id);
+      dispatch("deleted", document);
     }
   }
   async function setDocumentType(dt: DocumentType) {
