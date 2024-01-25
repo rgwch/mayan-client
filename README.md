@@ -14,7 +14,7 @@ Create a user for Nito in the Mayan app.
 
 To build Nito, you'll need [NodeJS](https://nodejs.org). Tested Version is 18.18.0.
 
-If you just want to have a quick look without installing the toolchain, you may use https://nito.surge.sh/ or https://nito.doktor.click/. (Note: This comes with no warranties and it can be removed or disabled at any time without notice). You'll still need a running Mayan EDMS instance to connect to.
+If you just want to have a quick look without installing the toolchain, you may use https://nito.surge.sh/ or https://mayan-client.vercel.app/. (Note: This comes with no warranties and it can be removed or disabled at any time without notice). You'll still need a running Mayan EDMS instance to connect to.
 
 ## Installation
 
