@@ -14,6 +14,8 @@ Create a user for Nito in the Mayan app. Create the Cabinets (Folders) you'll ne
 
 To build the app, you'll need [NodeJS](https://nodejs.org). Tested Version is 18.18.0.
 
+If you just want to have a quick look without installing the toolchain, you may use https://nito.surge.sh/. (Note: This comes with no warranties and it can be removed or disabled at any time without notice). You'll still need a running Mayan EDMS instance to connect to.
+
 ## Installation
 
 ```
@@ -24,7 +26,6 @@ npm run dev
 ```
 and navigate your favorite browser to http://localhost:5137. At the welcome screen, enter the URL for your Mayan-Server (including https://) and your credentials. 
 
-If you just want to have a quick look without installing the toolchain, you may use https://nito.surge.sh/. (Note: This comes with no warranties and it can be removed or disabled at any time without notice). You'll still need a running Mayan EDMS instance to connect to.
 
 ## Deployment
 
