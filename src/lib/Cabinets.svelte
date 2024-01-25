@@ -19,6 +19,9 @@
   import { CabinetTreeLoader } from "./model/treeloader";
   import Treeview from "./widgets/Treeview.svelte";
   const dispatch = createEventDispatcher();
+  let cabinetsOpen = window.screen.availWidth > 767 ? true : false;
+  let globalsOpen = window.screen.availWidth > 767 ? true : false;
+
   let toplevel: Array<Tree<Cabinet>> = [];
   $: {
     toplevel = $cabinets
@@ -32,69 +35,83 @@
   }
 </script>
 
-<!-- create new cabinet -->
+<!-- Cabinet list -->
 <div class="flex flex-row">
-  <h1 class="text-xl font-bold">{$_("cabinets")}</h1>
-  <button
-    class="ml-3 text-sm text-gray-600"
-    on:click={() => (createPanel = !createPanel)}
-    ><Fa icon={faFolderPlus}></Fa></button>
+  <h1 class="text-xl font-bold">
+    <a href="#/" on:click={() => (cabinetsOpen = !cabinetsOpen)}>
+      {$_("cabinets")}
+    </a>
+  </h1>
+  {#if cabinetsOpen}
+    <button
+      class="ml-3 text-sm text-gray-600"
+      on:click={() => (createPanel = !createPanel)}
+      ><Fa icon={faFolderPlus}></Fa></button>
+  {/if}
 </div>
+<!-- create new cabinet -->
 {#if createPanel}
   <div transition:slide={{ duration: 200 }}>
     <CreateCabinet on:created={addedCabinet}></CreateCabinet>
   </div>
 {/if}
 <!-- List of all cabinets -->
-<ul>
-  {#each toplevel as tree}
-    <li>
-      <Treeview {tree} on:selected></Treeview>
-    </li>
-  {/each}
-</ul>
+{#if cabinetsOpen}
+  <ul transition:slide={{ duration: 200 }}>
+    {#each toplevel as tree}
+      <li>
+        <Treeview {tree} on:selected></Treeview>
+      </li>
+    {/each}
+  </ul>
+{/if}
 
 <!-- collections not related to a single cabinet -->
 <h1 class="text-xl font-bold mt-4 pt-2 border-t-2 border-blue-200">
-  {$_("all")}
+  <a href="#/" on:click={() => (globalsOpen = !globalsOpen)}>
+    {$_("all")}
+  </a>
 </h1>
-<ul>
-  <li>
-    <!-- Favorites -->
-    <a
-      href="#/"
-      on:click={() =>
-        dispatch("selected", { id: -3, full_path: $_("favorites") })}
-      >{$_("favorites")}</a>
-  </li>
-  <li>
-    <!-- last created -->
-    <a
-      href="#/"
-      on:click={() =>
-        dispatch("selected", { id: -1, full_path: $_("lastcreated") })}
-      >{$_("lastcreated")}</a>
-  </li>
-  <li>
-    <!-- last accessed -->
-    <a
-      href="#/"
-      on:click={() =>
-        dispatch("selected", { id: -2, full_path: $_("lastaccessed") })}
-      >{$_("lastaccessed")}</a>
-  </li>
-  <li>
-    <!-- matching a search term -->
-    <Search
-      on:search={(event) =>
-        dispatch("selected", { id: -5, full_path: event.detail })}></Search>
-  </li>
-</ul>
-<!-- having a tag -->
-<div class="mt-3 w-32">
-  <Tags on:selected></Tags>
-</div>
-
+{#if globalsOpen}
+  <div transition:slide={{ duration: 200 }}>
+    <ul>
+      <li>
+        <!-- Favorites -->
+        <a
+          href="#/"
+          on:click={() =>
+            dispatch("selected", { id: -3, full_path: $_("favorites") })}
+          >{$_("favorites")}</a>
+      </li>
+      <li>
+        <!-- last created -->
+        <a
+          href="#/"
+          on:click={() =>
+            dispatch("selected", { id: -1, full_path: $_("lastcreated") })}
+          >{$_("lastcreated")}</a>
+      </li>
+      <li>
+        <!-- last accessed -->
+        <a
+          href="#/"
+          on:click={() =>
+            dispatch("selected", { id: -2, full_path: $_("lastaccessed") })}
+          >{$_("lastaccessed")}</a>
+      </li>
+      <li>
+        <!-- matching a search term -->
+        <Search
+          on:search={(event) =>
+            dispatch("selected", { id: -5, full_path: event.detail })}></Search>
+      </li>
+    </ul>
+    <!-- having a tag -->
+    <div class="mt-3 w-32">
+      <Tags on:selected></Tags>
+    </div>
+  </div>
+{/if}
 <!-- Create/Upload documents -->
 <div>
   <div class="mt-4 pt-2 border-t-2 border-blue-200">

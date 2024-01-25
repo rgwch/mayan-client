@@ -4,7 +4,7 @@ Nito was an ancient Mayan trade centre, ant this Nito is a client app for the [M
 
 Its aim is not (at all) to replace the original Mayan UI, but to provide a simpler UI approach for some common tasks which are somewhat hidden in the powerful original Mayan app.
 
-With Nito, you can upload, browse and download documents, you can create, modify and delete cabinets and tags for each document, and you can upload new documents. That's all.
+With Nito, you can upload, browse and download documents, you can create, modify and delete cabinets and tags for each document. That's all.
 
 ## Prerequisites
 
@@ -55,6 +55,10 @@ Please note that above operations are only possible, if the logged-in user has t
 
 Nito comes with german, english and french language files, being german the fallback. The language to use is taken from the browser's locale. You can also change the language by calling locale.set() in src/lib/i18n/i18n.ts.
 Adding new languanges is easy: Just create a file (e.g. it.json) with all the keys from de.json and translate the values. Then, add `register('it', () => import('./it.json'))` to src/lib/i18n/i18n.ts.
+
+## Web App
+
+On Android and iOS devices, you can use the "add to homescreen" feature to create an App-like launcher for Nito.
 
 ## Privacy
 
