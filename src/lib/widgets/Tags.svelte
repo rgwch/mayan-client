@@ -35,6 +35,7 @@
                     isDialog={true} />
                 <button
                     class="ml-6 mt-2 border border-blue-200 p-1 hover:bg-blue-200"
+                    class:hidden={!tagname}
                     on:click={addTag}
                     ><Fa
                         icon={faCheck}
