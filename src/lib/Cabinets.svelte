@@ -74,7 +74,7 @@
       <span class="text-xl">{$_("all")}</span>
     </div>
     <div slot="body">
-      <GlobalSearches></GlobalSearches>
+      <GlobalSearches on:selected></GlobalSearches>
     </div>
   </Collapse>
 </div>
