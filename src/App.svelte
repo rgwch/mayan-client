@@ -77,9 +77,9 @@
             }
           }}
           placeholder={$_("password")} />
-        <div class="mb-2 mt-1 flex flex-row">
+        <div class="mb-2 mt-1 flex flex-row items-center">
           <input
-            class="mr-2"
+            class="mr-4"
             type="checkbox"
             id="autologin"
             bind:checked={autologin} />
