@@ -8,9 +8,7 @@ With Nito, you can upload, browse and download documents, you can create, modify
 
 ## Prerequisites
 
-Youl'll need an existing Mayan EDMS instance running. I recommend using docker-compose with the compose-file [provided](https://docs.mayan-edms.com/chapters/docker/install_docker_compose.html#docker-compose-install) by Mayan.
-
-Create a user for Nito in the Mayan app. Create the Cabinets (Folders) you'll need from the Mayan UI.
+Youl'll need an existing Mayan EDMS instance running. I recommend using docker-compose with the compose-file [provided](https://docs.mayan-edms.com/chapters/docker/install_docker_compose.html#docker-compose-install) by Mayan. Create a user for Nito in the Mayan app. Create the Cabinets (Folders) you'll need from the Mayan UI.
 
 To build the app, you'll need [NodeJS](https://nodejs.org). Tested Version is 18.18.0.
 
@@ -22,7 +20,7 @@ cd mayan-client
 npm i
 npm run dev
 ```
-and navigate your favorite browser to http://localhost:5137. At the welcome screen, enter the URL for your Mayan-Server (including https://) and your credentials. 
+and navigate your favorite browser to http://localhost:5137. At the welcome screen, enter the URL for your Mayan-Server, and your credentials. 
 
 If you just want to have a quick look without installing the toolchain, you may use https://nito.surge.sh/. (Note: This comes with no warranties and it can be removed or disabled at any time without notice). You'll still need a running Mayan EDMS instance to connect to.
 
