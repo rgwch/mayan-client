@@ -56,7 +56,7 @@
   <Dropdown
     title={$_("cabinet")}
     elements={$cabinets}
-    label={(x) => x.label}
+    label={(x) => x.full_path}
     bind:selected={selectedCabinet} />
   <input
     class="inputfile"
