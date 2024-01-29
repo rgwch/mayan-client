@@ -89,6 +89,11 @@
         <div class="mt-8 mx-auto font-semibold text-sm text-center">
           {$_("privacy")}
         </div>
+        {#if version}
+          <div class="mt-1 font-light text-xs">
+            v.{version}
+          </div>
+        {/if}
         <div class="mt-1 font-light text-xs">
           v.{version}
         </div>
