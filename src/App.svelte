@@ -94,9 +94,6 @@
             v.{version}
           </div>
         {/if}
-        <div class="mt-1 font-light text-xs">
-          v.{version}
-        </div>
       </div>
     </div>
   {:else}
