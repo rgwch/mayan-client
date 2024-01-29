@@ -7,6 +7,8 @@
         <h3 class="text-sm font-semibold leading-6 text-gray-900">
             {heading}
         </h3>
-        <slot />
+        <slot>
+            This is the default card content.
+        </slot>
     </div>
 </div>
