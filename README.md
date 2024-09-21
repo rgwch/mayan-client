@@ -1,6 +1,6 @@
 # Nito
 
-Nito was an ancient Mayan trade centre, ant this Nito is a client app for the [Mayan EDMS](https://www.mayan-edms.com/)
+Nito was an ancient Mayan trade centre, and this Nito is a client app for the [Mayan EDMS](https://www.mayan-edms.com/)
 
 Its aim is not (at all) to replace the original Mayan UI, but to provide a simpler UI approach for some common tasks which are somewhat hidden in the powerful original Mayan app.
 
